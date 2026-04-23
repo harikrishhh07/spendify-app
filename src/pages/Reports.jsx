@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
+import LiveClock from '../components/LiveClock';
 import './Reports.css';
 
 export default function Reports() {
@@ -34,6 +35,7 @@ export default function Reports() {
 <h1 className="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">DASHBOARD</h1>
 </div>
 <div className="flex items-center gap-4">
+<LiveClock />
 <span onClick={() => alert("Notifications feature coming soon!")} className="material-symbols-outlined text-[#CCFF00] hover:opacity-80 active:scale-95 transition-all cursor-pointer" data-icon="notifications">notifications</span>
 </div>
 </header>

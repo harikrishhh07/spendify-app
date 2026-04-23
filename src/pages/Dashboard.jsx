@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
 import { useAuth } from '../context/AuthContext';
+import LiveClock from '../components/LiveClock';
 import './Dashboard.css';
 
 export default function Dashboard() {
@@ -46,6 +47,7 @@ export default function Dashboard() {
 <span className="text-xl font-black text-[#CCFF00] italic tracking-widest">SPENDIFY</span>
 </div>
 <div className="flex items-center gap-4">
+<LiveClock />
 <button onClick={() => alert("Notifications feature coming soon!")} className="active:scale-95 transition-all hover:opacity-80 text-[#CCFF00]">
 <span className="material-symbols-outlined" data-icon="notifications">notifications</span>
 </button>

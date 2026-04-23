@@ -2,12 +2,58 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  cursor: none;
 }
 
 body {
   font-family: 'Inter', sans-serif;
   background-color: #fcf8ff; /* from the design system */
   color: #1b1b23;
+  cursor: none;
+}
+
+/* Custom Smooth Cursor */
+.custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #CCFF00;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: all 0.1s ease-out;
+  box-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+}
+
+.custom-cursor.active {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(204, 255, 0, 0.1);
+  box-shadow: 0 0 20px rgba(204, 255, 0, 0.7);
+}
+
+.cursor-dot {
+  position: fixed;
+  width: 4px;
+  height: 4px;
+  background-color: #CCFF00;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transition: all 0.05s ease-out;
+}
+
+/* Interactive elements get special cursor treatment */
+button:hover,
+a:hover,
+input:hover,
+select:hover {
+  cursor: none;
+}
+
+.custom-cursor.hovering {
+  border-color: #FF4B89;
+  box-shadow: 0 0 15px rgba(255, 75, 137, 0.8);
 }
 
 /* Base App layout */

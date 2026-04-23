@@ -8,6 +8,7 @@ import ExpenseHistory from './pages/ExpenseHistory';
 import Reports from './pages/Reports';
 import Profile from './pages/Profile';
 import Goals from './pages/Goals';
+import CustomCursor from './components/CustomCursor';
 import { ExpenseProvider } from './context/ExpenseContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
@@ -26,6 +27,7 @@ export default function App() {
   return (
     <AuthProvider>
       <ExpenseProvider>
+        <CustomCursor />
         <Router>
           <div className="flex-1 flex flex-col w-full h-full">
             <main>

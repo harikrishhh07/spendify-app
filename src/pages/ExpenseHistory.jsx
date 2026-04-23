@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
+import LiveClock from '../components/LiveClock';
 import './ExpenseHistory.css';
 
 export default function ExpenseHistory() {
@@ -52,9 +53,12 @@ export default function ExpenseHistory() {
 </div>
 <span className="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">DASHBOARD</span>
 </div>
+<div className="flex items-center gap-4">
+<LiveClock />
 <button className="active:scale-95 transition-all hover:opacity-80">
 <span className="material-symbols-outlined text-[#CCFF00]">notifications</span>
 </button>
+</div>
 </header>
 
 <main className="pt-24 px-margin-mobile">

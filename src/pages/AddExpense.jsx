@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
+import LiveClock from '../components/LiveClock';
 import './AddExpense.css';
 
 export default function AddExpense() {
@@ -100,6 +101,7 @@ export default function AddExpense() {
 <h1 className="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">NEW TRANSACTION</h1>
 </div>
 <div className="flex items-center gap-4">
+<LiveClock />
 <span className="material-symbols-outlined text-white/60 hover:opacity-80 active:scale-95 transition-all" data-icon="notifications">notifications</span>
 <div className="w-8 h-8 rounded-full border border-white/15 overflow-hidden">
 <img className="w-full h-full object-cover" data-alt="close up professional portrait of a man with minimalist aesthetic and dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3HvCILNb57eS45uNFS-h2azqa6JF7ReEJe_4Mw21WpUx6jZ7sZbkNqxJu19kPWy8c9EA3sMS1IpPN63NIGlDvddKn2SpHEiizUJ8V4lVcs2Wku5lOGOcu5uYAp2BDMrYrxml5PdwbfpNZZHVmZxWDNdcTaba5V5ITD64ZHTCTGM5J0yX0ssgAN-9EgriKDmoyAyxIZrbpWlu-ZCRTuIEtTXsutf7JaWaCR2gjajFM65oVaTOn80ode_XkPLA7qhTmb9Z3flrs1OV3"/>
