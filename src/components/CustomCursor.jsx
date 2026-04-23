@@ -1,12 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 export default function CustomCursor() {
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef(null);
+  const dotRef = useRef(null);
+  const positionRef = useRef({ x: 0, y: 0 });
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setPosition({ x: e.clientX, y: e.clientY });
+      positionRef.current = { x: e.clientX, y: e.clientY };
+      
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${e.clientX - 10}px, ${e.clientY - 10}px, 0)`;
+      }
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${e.clientX - 2}px, ${e.clientY - 2}px, 0)`;
+      }
     };
 
     const handleMouseDown = () => {
@@ -31,17 +40,17 @@ export default function CustomCursor() {
   return (
     <>
       <div
+        ref={cursorRef}
         className={`custom-cursor ${isActive ? 'active' : ''}`}
         style={{
-          left: `${position.x - 10}px`,
-          top: `${position.y - 10}px`,
+          transform: 'translate3d(0, 0, 0)',
         }}
       />
       <div
+        ref={dotRef}
         className="cursor-dot"
         style={{
-          left: `${position.x - 2}px`,
-          top: `${position.y - 2}px`,
+          transform: 'translate3d(0, 0, 0)',
         }}
       />
     </>

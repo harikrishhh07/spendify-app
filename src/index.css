@@ -21,8 +21,9 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: 9999;
-  transition: all 0.1s ease-out;
   box-shadow: 0 0 10px rgba(204, 255, 0, 0.5);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .custom-cursor.active {
@@ -30,6 +31,7 @@ body {
   height: 40px;
   background-color: rgba(204, 255, 0, 0.1);
   box-shadow: 0 0 20px rgba(204, 255, 0, 0.7);
+  transition: all 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .cursor-dot {
@@ -40,7 +42,8 @@ body {
   border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
-  transition: all 0.05s ease-out;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 /* Interactive elements get special cursor treatment */
