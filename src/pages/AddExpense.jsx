@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
 import './AddExpense.css';
@@ -10,9 +10,16 @@ export default function AddExpense() {
   const [category, setCategory] = useState('Food');
   const [merchant, setMerchant] = useState('');
   const [expenseDate, setExpenseDate] = useState(() => new Date().toISOString().split('T')[0]);
-  const [showBalanceModal, setShowBalanceModal] = useState(transactions.length === 0 && initialBalance === 50000);
+  const [showBalanceModal, setShowBalanceModal] = useState(false);
   const [newBalance, setNewBalance] = useState(initialBalance.toString());
   const [transactionType, setTransactionType] = useState('expense');
+
+  // Show balance modal only on first visit when no transactions exist
+  useEffect(() => {
+    if (transactions && transactions.length === 0 && initialBalance === 50000) {
+      setShowBalanceModal(true);
+    }
+  }, []);
 
   const handleKeyPress = (key) => {
     if (key === 'backspace') {

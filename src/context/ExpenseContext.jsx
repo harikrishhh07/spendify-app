@@ -86,9 +86,10 @@ const generateSmartInsights = (transactions) => {
         const percentageChange = ((thisWeekSpent - previousWeekSpent) / previousWeekSpent) * 100;
         if (Math.abs(percentageChange) > 15) {
           const trend = percentageChange > 0 ? 'up' : 'down';
+          const trendText = trend === 'up' ? 'more' : 'less';
           insights.push({
             category,
-            message: `You spent ${Math.round(Math.abs(percentageChange))}% more on ${category.toLowerCase()} this week`,
+            message: `You spent ${Math.round(Math.abs(percentageChange))}% ${trendText} on ${category.toLowerCase()} this week`,
             type: trend === 'up' ? 'warning' : 'positive',
             percentage: Math.round(Math.abs(percentageChange))
           });
@@ -137,34 +138,58 @@ const getBudgetAlerts = (transactions, budgets) => {
 
 export const ExpenseProvider = ({ children }) => {
   const [initialBalance, setInitialBalance] = useState(() => {
-    const saved = localStorage.getItem('spendify_initial_balance');
-    return saved ? parseFloat(saved) : 50000;
+    try {
+      const saved = localStorage.getItem('spendify_initial_balance');
+      return saved ? parseFloat(saved) : 50000;
+    } catch (e) {
+      return 50000;
+    }
   });
 
   const [transactions, setTransactions] = useState(() => {
-    const saved = localStorage.getItem('spendify_transactions_v2');
-    if (saved) return JSON.parse(saved);
-    return initialTransactions;
+    try {
+      const saved = localStorage.getItem('spendify_transactions_v2');
+      if (saved) return JSON.parse(saved);
+      return initialTransactions;
+    } catch (e) {
+      return initialTransactions;
+    }
   });
 
   const [goals, setGoals] = useState(() => {
-    const saved = localStorage.getItem('spendify_goals_v2');
-    if (saved) return JSON.parse(saved);
-    return [];
+    try {
+      const saved = localStorage.getItem('spendify_goals_v2');
+      if (saved) return JSON.parse(saved);
+      return [];
+    } catch (e) {
+      return [];
+    }
   });
 
   const [budgets] = useState(initialBudgets);
 
   useEffect(() => {
-    localStorage.setItem('spendify_transactions_v2', JSON.stringify(transactions));
+    try {
+      localStorage.setItem('spendify_transactions_v2', JSON.stringify(transactions));
+    } catch (e) {
+      console.warn('Failed to save transactions to localStorage');
+    }
   }, [transactions]);
 
   useEffect(() => {
-    localStorage.setItem('spendify_goals_v2', JSON.stringify(goals));
+    try {
+      localStorage.setItem('spendify_goals_v2', JSON.stringify(goals));
+    } catch (e) {
+      console.warn('Failed to save goals to localStorage');
+    }
   }, [goals]);
 
   useEffect(() => {
-    localStorage.setItem('spendify_initial_balance', initialBalance.toString());
+    try {
+      localStorage.setItem('spendify_initial_balance', initialBalance.toString());
+    } catch (e) {
+      console.warn('Failed to save initial balance to localStorage');
+    }
   }, [initialBalance]);
 
   const addTransaction = (transaction) => {
