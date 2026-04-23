@@ -6,7 +6,7 @@ import './Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { transactions, totalBalance, budgets, achievements } = useExpenses();
+  const { transactions, totalBalance, budgets, achievements, smartInsights, subscriptions, budgetAlerts } = useExpenses();
   const { currentUser } = useAuth();
 
   const getCategoryTotal = (category) => {
@@ -162,6 +162,79 @@ export default function Dashboard() {
 ))}
 </div>
 </section>
+
+{budgetAlerts.length > 0 && (
+<section className="flex flex-col gap-md">
+<h2 className="font-headline-md text-headline-md text-white tracking-tight">Budget Alerts</h2>
+<div className="flex flex-col gap-sm">
+{budgetAlerts.map((alert, idx) => (
+<div key={idx} className={`glass-card rounded-xl p-4 border-l-4 ${alert.type === 'critical' ? 'border-red-500 bg-red-500/10' : 'border-yellow-500 bg-yellow-500/10'}`}>
+<div className="flex items-start justify-between">
+<div className="flex flex-col gap-1">
+<p className={`font-label-caps text-[10px] ${alert.type === 'critical' ? 'text-red-400' : 'text-yellow-400'}`}>
+{alert.type === 'critical' ? '🚨 CRITICAL' : '⚠️ WARNING'}
+</p>
+<p className="font-body-md text-white">{alert.message}</p>
+<p className="font-label-caps text-[10px] text-white/60">
+₹{alert.spent.toLocaleString('en-IN')} / ₹{alert.budget.toLocaleString('en-IN')} ({alert.percentage}%)
+</p>
+</div>
+<div className={`text-2xl font-bold ${alert.type === 'critical' ? 'text-red-400' : 'text-yellow-400'}`}>
+{alert.percentage}%
+</div>
+</div>
+</div>
+))}
+</div>
+</section>
+)}
+
+{smartInsights.length > 0 && (
+<section className="flex flex-col gap-md">
+<h2 className="font-headline-md text-headline-md text-white tracking-tight">Smart Insights</h2>
+<div className="flex flex-col gap-sm">
+{smartInsights.map((insight, idx) => (
+<div key={idx} className={`glass-card rounded-xl p-4 border-l-4 ${insight.type === 'warning' ? 'border-red-500 bg-red-500/5' : 'border-green-500 bg-green-500/5'}`}>
+<div className="flex items-start justify-between">
+<div className="flex flex-col gap-1">
+<p className={`font-label-caps text-[10px] ${insight.type === 'warning' ? 'text-red-400' : 'text-green-400'}`}>
+{insight.type === 'warning' ? '📈 ALERT' : '✅ POSITIVE'}
+</p>
+<p className="font-body-md text-white">{insight.message}</p>
+</div>
+<div className={`text-2xl font-bold ${insight.type === 'warning' ? 'text-red-400' : 'text-green-400'}`}>
+{insight.percentage}%
+</div>
+</div>
+</div>
+))}
+</div>
+</section>
+)}
+
+{subscriptions.length > 0 && (
+<section className="flex flex-col gap-md">
+<h2 className="font-headline-md text-headline-md text-white tracking-tight">Detected Subscriptions</h2>
+<div className="flex flex-col gap-sm">
+{subscriptions.map((sub, idx) => (
+<div key={idx} className="glass-card rounded-xl p-4 border-l-4 border-purple-500 bg-purple-500/5">
+<div className="flex items-start justify-between">
+<div className="flex flex-col gap-1">
+<p className="font-label-caps text-[10px] text-purple-400">💳 SUBSCRIPTION</p>
+<p className="font-body-md text-white">{sub.category}</p>
+<p className="font-label-caps text-[10px] text-white/60">
+₹{sub.amount.toLocaleString('en-IN')} {sub.frequency} ({sub.transactions} transactions)
+</p>
+</div>
+<div className="text-2xl font-bold text-purple-400">
+{sub.amount}₹
+</div>
+</div>
+</div>
+))}
+</div>
+</section>
+)}
 
 <section className="flex flex-col gap-md">
 <div className="flex justify-between items-end">

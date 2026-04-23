@@ -5,11 +5,14 @@ import './AddExpense.css';
 
 export default function AddExpense() {
   const navigate = useNavigate();
-  const { addTransaction } = useExpenses();
+  const { addTransaction, totalBalance, initialBalance, setBalance, transactions } = useExpenses();
   const [amount, setAmount] = useState('0');
   const [category, setCategory] = useState('Food');
   const [merchant, setMerchant] = useState('');
   const [expenseDate, setExpenseDate] = useState(() => new Date().toISOString().split('T')[0]);
+  const [showBalanceModal, setShowBalanceModal] = useState(transactions.length === 0 && initialBalance === 50000);
+  const [newBalance, setNewBalance] = useState(initialBalance.toString());
+  const [transactionType, setTransactionType] = useState('expense');
 
   const handleKeyPress = (key) => {
     if (key === 'backspace') {
@@ -22,21 +25,63 @@ export default function AddExpense() {
     }
   };
 
+  const handleSetBalance = () => {
+    const balance = parseFloat(newBalance);
+    if (balance > 0) {
+      setBalance(balance);
+      setShowBalanceModal(false);
+    }
+  };
+
   const handleSave = () => {
     if (parseFloat(amount) > 0) {
+      const balanceAfter = transactionType === 'expense' 
+        ? totalBalance - parseFloat(amount)
+        : totalBalance + parseFloat(amount);
+
       addTransaction({
-        name: merchant.trim() || 'Manual Expense',
+        name: merchant.trim() || (transactionType === 'income' ? 'Manual Income' : 'Manual Expense'),
         amount: parseFloat(amount),
-        type: 'expense',
+        type: transactionType,
         category: category,
         date: expenseDate ? new Date(expenseDate).toISOString() : new Date().toISOString()
       });
+
+      // Show confirmation with new balance
+      alert(`${transactionType === 'expense' ? 'Expense' : 'Income'} added!\n\nNew Balance: ₹${balanceAfter.toLocaleString('en-IN')}`);
       navigate('/dashboard');
     }
   };
 
   return (
     <>
+      {showBalanceModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-[20px] z-50 flex items-center justify-center">
+          <div className="glass-card rounded-2xl p-8 max-w-sm mx-4 flex flex-col gap-md">
+            <h1 className="font-headline-lg text-headline-lg text-white">Set Your Initial Balance</h1>
+            <p className="text-white/60">Enter your current account balance to get started</p>
+            
+            <div className="flex items-baseline gap-xs bg-white/5 rounded-lg px-4 py-3">
+              <span className="font-display-sm text-[#CCFF00]">₹</span>
+              <input 
+                type="number" 
+                value={newBalance} 
+                onChange={(e) => setNewBalance(e.target.value)}
+                placeholder="50000"
+                className="bg-transparent border-none outline-none font-display-md text-white w-full"
+                autoFocus
+              />
+            </div>
+
+            <button 
+              onClick={handleSetBalance}
+              className="w-full h-12 bg-[#CCFF00] rounded-full flex items-center justify-center active:scale-95 transition-all shadow-[0_0_20px_rgba(204,255,0,0.3)]"
+            >
+              <span className="font-label-caps text-black font-black uppercase tracking-widest">SET BALANCE</span>
+            </button>
+          </div>
+        </div>
+      )}
       
 <div className="fixed inset-0 bg-noise pointer-events-none"></div>
 
@@ -45,7 +90,7 @@ export default function AddExpense() {
 <button onClick={() => navigate(-1)} className="active:scale-95 transition-all text-[#CCFF00]">
 <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 0"}}>arrow_back</span>
 </button>
-<h1 className="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">NEW EXPENSE</h1>
+<h1 className="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">NEW TRANSACTION</h1>
 </div>
 <div className="flex items-center gap-4">
 <span className="material-symbols-outlined text-white/60 hover:opacity-80 active:scale-95 transition-all" data-icon="notifications">notifications</span>
@@ -56,12 +101,32 @@ export default function AddExpense() {
 </header>
 <main className="pt-24 pb-32 px-margin-mobile flex flex-col gap-xl max-w-lg mx-auto">
 
+<div className="flex gap-2 mb-4">
+<button 
+  onClick={() => setTransactionType('expense')}
+  className={`flex-1 py-2 px-3 rounded-lg font-label-caps text-[11px] transition-all ${transactionType === 'expense' ? 'bg-[#CCFF00] text-black' : 'bg-white/10 text-white'}`}
+>
+Expense
+</button>
+<button 
+  onClick={() => setTransactionType('income')}
+  className={`flex-1 py-2 px-3 rounded-lg font-label-caps text-[11px] transition-all ${transactionType === 'income' ? 'bg-green-500 text-white' : 'bg-white/10 text-white'}`}
+>
+Income
+</button>
+</div>
+
 <section className="flex flex-col items-center justify-center py-lg">
 <span className="font-label-caps text-label-caps text-white/40 mb-xs">AMOUNT</span>
 <div className="flex items-baseline gap-xs">
 <span className="font-display-xl text-headline-lg text-[#CCFF00] opacity-50">₹</span>
 <span className="font-display-xl text-display-xl tracking-tighter text-white">{amount}</span>
 </div>
+{totalBalance > 0 && transactionType === 'expense' && (
+  <span className="font-label-caps text-[10px] text-white/40 mt-2">
+    After: ₹{(totalBalance - parseFloat(amount || 0)).toLocaleString('en-IN')}
+  </span>
+)}
 </section>
 
 <section className="grid grid-cols-4 gap-sm">
@@ -151,10 +216,9 @@ export default function AddExpense() {
 </Link>
 <Link to="/profile" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
 <span className="material-symbols-outlined" data-icon="person">person</span>
-<span className="font-bold text-[10px] uppercase tracking-widest mt-1">Profile</span>
+<span className="font-bold text-[10px] uppercase tracking-widest">Profile</span>
 </Link>
 </nav>
-
     </>
   );
 }
