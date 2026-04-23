@@ -1,12 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
 export default function Login() {
   const navigate = useNavigate();
+  const { loginWithGoogle, currentUser } = useAuth();
   const [email, setEmail] = useState('test@example.com');
   const [password, setPassword] = useState('password123');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate('/dashboard');
+    }
+  }, [currentUser, navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -14,6 +22,16 @@ export default function Login() {
       navigate('/dashboard');
     } else {
       setError('Invalid credentials. Use test@example.com / password123');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      setError('');
+      await loginWithGoogle();
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Failed to log in with Google: ' + err.message);
     }
   };
 
@@ -65,7 +83,7 @@ export default function Login() {
 <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.039 2.48-4.5 2.597-4.571-1.428-2.09-3.623-2.324-4.402-2.376-1.857-.13-3.085 1.09-3.998 1.09zM15.483 3.935c.805-.974 1.35-2.338 1.208-3.688-1.156.052-2.558.78-3.389 1.753-.74.844-1.39 2.247-1.208 3.558 1.286.104 2.584-.649 3.389-1.623z"></path></svg>
 <span className="font-label-caps text-white text-[10px]">APPLE</span>
 </button>
-<button className="glass-panel hover:bg-white/5 py-sm rounded-lg flex items-center justify-center gap-sm transition-all active:scale-95">
+<button onClick={handleGoogleLogin} className="glass-panel hover:bg-white/5 py-sm rounded-lg flex items-center justify-center gap-sm transition-all active:scale-95">
 <svg className="w-5 h-5" viewBox="0 0 24 24"><path d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z" fill="#EA4335"></path><path d="M16.04 18.013c-1.09.693-2.475 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.823l-4.04 3.067C3.186 21.314 7.26 24 12 24c3.11 0 5.924-1.017 8.118-2.75l-4.078-3.237z" fill="#34A853"></path><path d="M23.99 12.218c0-.796-.076-1.592-.216-2.368H12v4.482h6.718c-.287 1.548-1.155 2.864-2.458 3.732l4.078 3.237C22.736 19.1 23.99 15.967 23.99 12.218z" fill="#4285F4"></path><path d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.134-1.531.368-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z" fill="#FBBC05"></path></svg>
 <span className="font-label-caps text-white text-[10px]">GOOGLE</span>
 </button>

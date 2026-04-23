@@ -1,11 +1,13 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
+import { useAuth } from '../context/AuthContext';
 import './Dashboard.css';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { transactions, totalBalance, budgets, achievements } = useExpenses();
+  const { currentUser } = useAuth();
 
   const getCategoryTotal = (category) => {
     return transactions.filter(t => t.type === 'expense' && t.category === category).reduce((acc, curr) => acc + curr.amount, 0);
@@ -33,8 +35,12 @@ export default function Dashboard() {
 
 <header className="fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
 <div className="flex items-center gap-2">
-<div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
-<img alt="User Profile" data-alt="close-up portrait of a professional athlete with high contrast lighting on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWeKhLEysicacMf2A3luTAIi454gjflmKyWsy7ZSOjyIa5weAAkg3hwImBq0tjlLPNrg1X20kGRUWSlBSC0tyT3FykXa_T2nEslIXyIa5IMVvh1fN1Jhsr2rnBK3VlFtDvPZwTJPNPh6QlLWJkdjInQCOjIBDIRgCGdDIaeBQXFGcXedKJ5MwuscyozuLqfiU19L853CykG24QxpjEbHVMtxfvHrBuWuLcXm7VoVMX6LURPw-J0NaWsst9dyYTuP3ajvlhyblckYoa"/>
+<div className="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center">
+{currentUser?.photoURL ? (
+  <img alt="User Profile" src={currentUser.photoURL}/>
+) : (
+  <span className="material-symbols-outlined text-[20px] text-white/50">person</span>
+)}
 </div>
 <img src="/spendify_logo.png" alt="Spendify Logo" className="h-6 object-contain" />
 <span className="text-xl font-black text-[#CCFF00] italic tracking-widest">SPENDIFY</span>

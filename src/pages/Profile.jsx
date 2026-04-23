@@ -1,10 +1,12 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function Profile() {
   const navigate = useNavigate();
   const { achievements } = useExpenses();
+  const { currentUser, logout } = useAuth();
 
   const handleResetData = () => {
     if (window.confirm("Are you sure you want to delete all transactions and reset your account?")) {
@@ -13,8 +15,13 @@ export default function Profile() {
     }
   };
 
-  const handleLogout = () => {
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error("Failed to log out", error);
+    }
   };
 
   return (
@@ -29,12 +36,16 @@ export default function Profile() {
 
       <main className="pt-24 pb-32 px-margin-mobile flex flex-col gap-xl max-w-lg mx-auto">
         <section className="flex flex-col items-center justify-center py-lg gap-md">
-          <div className="w-24 h-24 rounded-full border-2 border-[#CCFF00] overflow-hidden">
-            <img className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3HvCILNb57eS45uNFS-h2azqa6JF7ReEJe_4Mw21WpUx6jZ7sZbkNqxJu19kPWy8c9EA3sMS1IpPN63NIGlDvddKn2SpHEiizUJ8V4lVcs2Wku5lOGOcu5uYAp2BDMrYrxml5PdwbfpNZZHVmZxWDNdcTaba5V5ITD64ZHTCTGM5J0yX0ssgAN-9EgriKDmoyAyxIZrbpWlu-ZCRTuIEtTXsutf7JaWaCR2gjajFM65oVaTOn80ode_XkPLA7qhTmb9Z3flrs1OV3" alt="User Profile" />
+          <div className="w-24 h-24 rounded-full border-2 border-[#CCFF00] overflow-hidden bg-surface-container flex items-center justify-center">
+            {currentUser?.photoURL ? (
+              <img className="w-full h-full object-cover" src={currentUser.photoURL} alt="User Profile" />
+            ) : (
+              <span className="material-symbols-outlined text-4xl text-white/50">person</span>
+            )}
           </div>
           <div className="text-center">
-            <h2 className="font-display-xl text-headline-lg text-white">Test User</h2>
-            <p className="font-label-caps text-label-caps text-white/40">test@example.com</p>
+            <h2 className="font-display-xl text-headline-lg text-white">{currentUser?.displayName || 'User'}</h2>
+            <p className="font-label-caps text-label-caps text-white/40">{currentUser?.email || 'No email'}</p>
           </div>
         </section>
 
