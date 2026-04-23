@@ -55,7 +55,7 @@ export default function Dashboard() {
 
 <section className="flex flex-col gap-xs pt-4">
 <span className="font-label-caps text-label-caps text-white/60">TOTAL BALANCE</span>
-<h1 className="font-display-xl text-display-xl tracking-tighter">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalBalance)}</h1>
+<h1 className="font-display-xl text-display-xl tracking-tighter">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(totalBalance)}</h1>
 <div className="flex items-center gap-sm mt-2">
 <span className="px-2 py-1 bg-primary-container text-on-primary-container text-[10px] font-black rounded-full">+12.4% THIS MONTH</span>
 <span className="font-label-caps text-[10px] text-white/40">LAST SYNC: 2M AGO</span>
@@ -66,15 +66,15 @@ export default function Dashboard() {
 <div className="flex flex-col gap-md">
 <div className="flex flex-col">
 <span className="font-label-caps text-label-caps text-[#CCFF00]">HOUSING</span>
-<span className="font-numeric-data text-numeric-data">${housingSpent} / ${budgets.Housing}</span>
+<span className="font-numeric-data text-numeric-data">₹{housingSpent} / ₹{budgets.Housing}</span>
 </div>
 <div className="flex flex-col">
 <span className="font-label-caps text-label-caps text-[#FF4B89]">FOOD</span>
-<span className="font-numeric-data text-numeric-data">${foodSpent} / ${budgets.Food}</span>
+<span className="font-numeric-data text-numeric-data">₹{foodSpent} / ₹{budgets.Food}</span>
 </div>
 <div className="flex flex-col">
 <span className="font-label-caps text-label-caps text-[#00DBE9]">FUN</span>
-<span className="font-numeric-data text-numeric-data">${funSpent} / ${budgets.Fun}</span>
+<span className="font-numeric-data text-numeric-data">₹{funSpent} / ₹{budgets.Fun}</span>
 </div>
 </div>
 
@@ -154,7 +154,7 @@ export default function Dashboard() {
   </div>
   <div className="flex flex-col items-end">
   <span className={`font-numeric-data ${t.type === 'income' ? 'text-[#CCFF00]' : 'text-white'}`}>
-    {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(t.amount)}
+    {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(t.amount)}
   </span>
   <span className="px-2 py-0.5 rounded-full bg-primary-container/20 text-[#CCFF00] text-[8px] font-black uppercase">Settled</span>
   </div>

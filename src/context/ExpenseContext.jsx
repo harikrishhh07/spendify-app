@@ -4,29 +4,24 @@ const ExpenseContext = createContext();
 
 export const useExpenses = () => useContext(ExpenseContext);
 
-const initialTransactions = [
-  { id: '1', name: 'Salary Deposit', amount: 8500, type: 'income', category: 'Income', date: new Date().toISOString() },
-  { id: '2', name: 'Rent', amount: 2100, type: 'expense', category: 'Housing', date: new Date().toISOString() },
-  { id: '3', name: 'Whole Foods Market', amount: 124.50, type: 'expense', category: 'Food', date: new Date().toISOString() },
-  { id: '4', name: 'Uber Trip', amount: 32.00, type: 'expense', category: 'Transport', date: new Date().toISOString() },
-];
+const initialTransactions = [];
 
 const initialBudgets = {
-  Housing: 2500,
-  Food: 800,
-  Fun: 500,
-  Transport: 400
+  Housing: 15000,
+  Food: 5000,
+  Fun: 3000,
+  Transport: 2000
 };
 
 export const ExpenseProvider = ({ children }) => {
   const [transactions, setTransactions] = useState(() => {
-    const saved = localStorage.getItem('spendify_transactions');
+    const saved = localStorage.getItem('spendify_transactions_v2');
     if (saved) return JSON.parse(saved);
     return initialTransactions;
   });
 
   const [goals, setGoals] = useState(() => {
-    const saved = localStorage.getItem('spendify_goals');
+    const saved = localStorage.getItem('spendify_goals_v2');
     if (saved) return JSON.parse(saved);
     return [];
   });
@@ -34,11 +29,11 @@ export const ExpenseProvider = ({ children }) => {
   const [budgets] = useState(initialBudgets);
 
   useEffect(() => {
-    localStorage.setItem('spendify_transactions', JSON.stringify(transactions));
+    localStorage.setItem('spendify_transactions_v2', JSON.stringify(transactions));
   }, [transactions]);
 
   useEffect(() => {
-    localStorage.setItem('spendify_goals', JSON.stringify(goals));
+    localStorage.setItem('spendify_goals_v2', JSON.stringify(goals));
   }, [goals]);
 
   const addTransaction = (transaction) => {

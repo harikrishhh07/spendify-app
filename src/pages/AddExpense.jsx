@@ -59,7 +59,7 @@ export default function AddExpense() {
 <section className="flex flex-col items-center justify-center py-lg">
 <span className="font-label-caps text-label-caps text-white/40 mb-xs">AMOUNT</span>
 <div className="flex items-baseline gap-xs">
-<span className="font-display-xl text-headline-lg text-[#CCFF00] opacity-50">$</span>
+<span className="font-display-xl text-headline-lg text-[#CCFF00] opacity-50">₹</span>
 <span className="font-display-xl text-display-xl tracking-tighter text-white">{amount}</span>
 </div>
 </section>

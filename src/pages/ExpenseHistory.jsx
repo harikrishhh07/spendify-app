@@ -87,7 +87,7 @@ export default function ExpenseHistory() {
     </div>
     </div>
     <span className={`font-numeric-data text-numeric-data ${t.type === 'income' ? 'text-[#CCFF00]' : 'text-white'}`}>
-      {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(t.amount)}
+      {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(t.amount)}
     </span>
     </div>
   ))}

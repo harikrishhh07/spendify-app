@@ -50,7 +50,7 @@ export default function Goals() {
             <div className="flex flex-col w-full">
               <span className="font-label-caps text-label-caps text-white/40">TARGET AMOUNT</span>
               <div className="flex items-center gap-2">
-                <span className="text-white/40">$</span>
+                <span className="text-white/40">₹</span>
                 <input 
                   type="number" 
                   value={targetAmount} 
@@ -77,7 +77,7 @@ export default function Goals() {
                 <div key={goal.id} className="glass-card p-4 rounded-xl flex flex-col gap-sm">
                   <div className="flex justify-between items-center">
                     <span className="font-body-lg font-bold text-white">{goal.name}</span>
-                    <span className="font-numeric-data text-[#CCFF00]">${goal.targetAmount.toLocaleString()}</span>
+                    <span className="font-numeric-data text-[#CCFF00]">₹{goal.targetAmount.toLocaleString()}</span>
                   </div>
                   <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
                     <div 

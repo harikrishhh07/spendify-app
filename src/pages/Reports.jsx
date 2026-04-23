@@ -73,7 +73,7 @@ export default function Reports() {
 <div className="glass-card rounded-xl p-lg">
 <h3 className="font-label-caps text-label-caps text-on-surface-variant mb-sm">AVERAGE DAILY SPEND</h3>
 <div className="flex items-baseline gap-xs">
-<span className="font-display-xl text-display-xl text-[#CCFF00] glow-lime">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(averageDailySpend)}</span>
+<span className="font-display-xl text-display-xl text-[#CCFF00] glow-lime">{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(averageDailySpend)}</span>
 <span className="font-numeric-data text-secondary-fixed text-sm">/ day</span>
 </div>
 <p className="text-on-surface-variant text-sm mt-sm">Your spending intensity is higher than last week's average.</p>
