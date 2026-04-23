@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=Lexend:wght@500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#7df4ff",
+                    "tertiary": "#ffffff",
+                    "surface": "#131313",
+                    "error": "#ffb4ab",
+                    "outline-variant": "#444933",
+                    "on-tertiary-fixed": "#002022",
+                    "on-primary-fixed": "#161e00",
+                    "outline": "#8e9379",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary-container": "#7df4ff",
+                    "tertiary-fixed-dim": "#00dbe9",
+                    "on-surface": "#e2e2e2",
+                    "on-secondary-fixed": "#3f0019",
+                    "inverse-surface": "#e2e2e2",
+                    "primary-container": "#c3f400",
+                    "on-background": "#e2e2e2",
+                    "primary-fixed": "#c3f400",
+                    "primary-fixed-dim": "#abd600",
+                    "surface-dim": "#131313",
+                    "on-tertiary-fixed-variant": "#004f54",
+                    "on-secondary-fixed-variant": "#8f0041",
+                    "surface-tint": "#abd600",
+                    "surface-container": "#1f1f1f",
+                    "surface-variant": "#353535",
+                    "secondary-container": "#ff4b89",
+                    "on-primary": "#283500",
+                    "surface-bright": "#393939",
+                    "on-secondary": "#66002c",
+                    "primary": "#ffffff",
+                    "on-primary-fixed-variant": "#3c4d00",
+                    "inverse-primary": "#506600",
+                    "on-tertiary": "#00363a",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffb1c3",
+                    "secondary": "#ffb1c3",
+                    "inverse-on-surface": "#303030",
+                    "secondary-fixed": "#ffd9e0",
+                    "on-primary-container": "#556d00",
+                    "on-surface-variant": "#c4c9ac",
+                    "on-error": "#690005",
+                    "surface-container-low": "#1b1b1b",
+                    "surface-container-high": "#2a2a2a",
+                    "on-secondary-container": "#590026",
+                    "surface-container-highest": "#353535",
+                    "on-tertiary-container": "#006f77",
+                    "background": "#131313",
+                    "error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-caps": ["lexend"],
+                    "display-xl": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "numeric-data": ["lexend"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "numeric-data": ["20px", {"lineHeight": "1", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #000000;
+        }
+        .glass-card {
+            background-color: rgba(28, 28, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .inset-divider {
+            margin-left: 56px;
+            border-bottom: 1px solid rgba(44, 44, 46, 0.8);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen pb-32">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 z-50 w-full bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden border border-white/10">
+<img alt="User Profile" data-alt="close-up portrait of a professional athlete with focused expression, high-contrast black and white lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZYIwlppTZO9Rx35KmPsl7op_-TjWzpWfxcEholE0Oy-rM0ZGvIHjnYTN7ww1acE-JNX1DnEeSIObJHKTWTZwcO-K6bGu9bzuwZRP-mc-SRUkQjf4SrLvN8ue-LUT1cJF477JAohcWcMqUk0M8A0IuQG-XQh8cXWkGRJhadtj9RHKH_OXJj2mQ30tyOngPcc_aoMicegpFGllo6oaabqLBj492egslzLzfp2maoSFwnSr629qurW3UhhOkuDop1IIc4sk9CUgrdFkh"/>
+</div>
+<span class="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">DASHBOARD</span>
+</div>
+<button class="active:scale-95 transition-all hover:opacity-80">
+<span class="material-symbols-outlined text-[#CCFF00]">notifications</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 px-margin-mobile">
+<!-- Minimalist Search Bar -->
+<div class="mb-lg">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-white/40">search</span>
+<input class="w-full bg-[#1C1C1E] border border-white/10 rounded-xl py-3 pl-12 pr-4 font-body-md text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#CCFF00]/50 transition-all" placeholder="Search transactions..." type="text"/>
+</div>
+</div>
+<!-- Expense History List (Apple Fitness Style) -->
+<section class="space-y-xl">
+<!-- Date Group: TODAY -->
+<div class="space-y-md">
+<h2 class="font-label-caps text-label-caps text-white/40 px-2">TODAY, OCTOBER 24</h2>
+<div class="glass-card rounded-2xl overflow-hidden">
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#CCFF00]">shopping_cart</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-white font-bold">Whole Foods Market</span>
+<span class="font-label-caps text-[10px] text-white/40">GROCERIES • 10:42 AM</span>
+</div>
+</div>
+<span class="font-numeric-data text-numeric-data text-white">-$142.50</span>
+</div>
+<div class="inset-divider"></div>
+<!-- Transaction Item (Income) -->
+<div class="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-[#CCFF00]/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#CCFF00]">payments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-white font-bold">Freelance Payout</span>
+<span class="font-label-caps text-[10px] text-white/40">INCOME • 09:15 AM</span>
+</div>
+</div>
+<span class="font-numeric-data text-numeric-data text-[#CCFF00]">+$2,450.00</span>
+</div>
+</div>
+</div>
+<!-- Date Group: YESTERDAY -->
+<div class="space-y-md">
+<h2 class="font-label-caps text-label-caps text-white/40 px-2">YESTERDAY, OCTOBER 23</h2>
+<div class="glass-card rounded-2xl overflow-hidden">
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">fitness_center</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-white font-bold">Equinox Premium</span>
+<span class="font-label-caps text-[10px] text-white/40">HEALTH • 06:00 PM</span>
+</div>
+</div>
+<span class="font-numeric-data text-numeric-data text-white">-$260.00</span>
+</div>
+<div class="inset-divider"></div>
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">local_taxi</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-white font-bold">Uber Trip</span>
+<span class="font-label-caps text-[10px] text-white/40">TRANSPORT • 02:30 PM</span>
+</div>
+</div>
+<span class="font-numeric-data text-numeric-data text-white">-$24.80</span>
+</div>
+<div class="inset-divider"></div>
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#CCFF00]">restaurant</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-white font-bold">Sushi Nakazawa</span>
+<span class="font-label-caps text-[10px] text-white/40">DINING • 08:45 PM</span>
+</div>
+</div>
+<span class="font-numeric-data text-numeric-data text-white">-$315.00</span>
+</div>
+</div>
+</div>
+<!-- Date Group: OCTOBER 22 -->
+<div class="space-y-md">
+<h2 class="font-label-caps text-label-caps text-white/40 px-2">OCTOBER 22</h2>
+<div class="glass-card rounded-2xl overflow-hidden">
+<!-- Transaction Item -->
+<div class="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-white font-bold">Electric Utility</span>
+<span class="font-label-caps text-[10px] text-white/40">BILLS • 11:20 AM</span>
+</div>
+</div>
+<span class="font-numeric-data text-numeric-data text-white">-$89.12</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-black/70 backdrop-blur-[20px] border-t border-white/15">
+<a class="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Summary</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#CCFF00] scale-105 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">monitoring</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Trends</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

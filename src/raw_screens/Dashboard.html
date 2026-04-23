@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&amp;family=Lexend:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#7df4ff",
+                    "tertiary": "#ffffff",
+                    "surface": "#131313",
+                    "error": "#ffb4ab",
+                    "outline-variant": "#444933",
+                    "on-tertiary-fixed": "#002022",
+                    "on-primary-fixed": "#161e00",
+                    "outline": "#8e9379",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary-container": "#7df4ff",
+                    "tertiary-fixed-dim": "#00dbe9",
+                    "on-surface": "#e2e2e2",
+                    "on-secondary-fixed": "#3f0019",
+                    "inverse-surface": "#e2e2e2",
+                    "primary-container": "#c3f400",
+                    "on-background": "#e2e2e2",
+                    "primary-fixed": "#c3f400",
+                    "primary-fixed-dim": "#abd600",
+                    "surface-dim": "#131313",
+                    "on-tertiary-fixed-variant": "#004f54",
+                    "on-secondary-fixed-variant": "#8f0041",
+                    "surface-tint": "#abd600",
+                    "surface-container": "#1f1f1f",
+                    "surface-variant": "#353535",
+                    "secondary-container": "#ff4b89",
+                    "on-primary": "#283500",
+                    "surface-bright": "#393939",
+                    "on-secondary": "#66002c",
+                    "primary": "#ffffff",
+                    "on-primary-fixed-variant": "#3c4d00",
+                    "inverse-primary": "#506600",
+                    "on-tertiary": "#00363a",
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffb1c3",
+                    "secondary": "#ffb1c3",
+                    "inverse-on-surface": "#303030",
+                    "secondary-fixed": "#ffd9e0",
+                    "on-primary-container": "#556d00",
+                    "on-surface-variant": "#c4c9ac",
+                    "on-error": "#690005",
+                    "surface-container-low": "#1b1b1b",
+                    "surface-container-high": "#2a2a2a",
+                    "on-secondary-container": "#590026",
+                    "surface-container-highest": "#353535",
+                    "on-tertiary-container": "#006f77",
+                    "background": "#131313",
+                    "error-container": "#93000a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "4px",
+                    "margin-mobile": "20px",
+                    "unit": "4px",
+                    "sm": "8px",
+                    "xl": "32px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "gutter": "16px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Lexend"],
+                    "display-xl": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "numeric-data": ["Lexend"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "display-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "800"}],
+                    "headline-md": ["24px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "numeric-data": ["20px", {"lineHeight": "1", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #000000; color: #ffffff; -webkit-font-smoothing: antialiased; }
+        .glass-card {
+            background-color: rgba(28, 28, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .activity-ring-bg { fill: none; stroke: #2C2C2E; stroke-width: 12; }
+        .activity-ring-progress { fill: none; stroke-width: 12; stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dasharray 0.3s ease; }
+        
+        .badge-3d {
+            position: relative;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent 60%);
+            box-shadow: 
+                inset 0 2px 4px rgba(255,255,255,0.3),
+                inset 0 -2px 4px rgba(0,0,0,0.5),
+                0 4px 10px rgba(0,0,0,0.4);
+            transition: transform 0.2s ease;
+        }
+        .badge-3d::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+            pointer-events: none;
+        }
+        .badge-3d:active {
+            transform: scale(0.95) rotateY(10deg);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-black font-body-md overflow-x-hidden pb-24">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-high">
+<img alt="User Profile" data-alt="close-up portrait of a professional athlete with high contrast lighting on a dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWeKhLEysicacMf2A3luTAIi454gjflmKyWsy7ZSOjyIa5weAAkg3hwImBq0tjlLPNrg1X20kGRUWSlBSC0tyT3FykXa_T2nEslIXyIa5IMVvh1fN1Jhsr2rnBK3VlFtDvPZwTJPNPh6QlLWJkdjInQCOjIBDIRgCGdDIaeBQXFGcXedKJ5MwuscyozuLqfiU19L853CykG24QxpjEbHVMtxfvHrBuWuLcXm7VoVMX6LURPw-J0NaWsst9dyYTuP3ajvlhyblckYoa"/>
+</div>
+<span class="text-xl font-black text-[#CCFF00] italic tracking-widest">SPENDIFY</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-all hover:opacity-80 text-[#CCFF00]">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<main class="mt-20 px-margin-mobile flex flex-col gap-xl">
+<!-- Hero Balance Section -->
+<section class="flex flex-col gap-xs pt-4">
+<span class="font-label-caps text-label-caps text-white/60">TOTAL BALANCE</span>
+<h1 class="font-display-xl text-display-xl tracking-tighter">$14,290.45</h1>
+<div class="flex items-center gap-sm mt-2">
+<span class="px-2 py-1 bg-primary-container text-on-primary-container text-[10px] font-black rounded-full">+12.4% THIS MONTH</span>
+<span class="font-label-caps text-[10px] text-white/40">LAST SYNC: 2M AGO</span>
+</div>
+</section>
+<!-- Activity Rings Section -->
+<section class="glass-card rounded-xl p-6 flex items-center justify-between overflow-hidden">
+<div class="flex flex-col gap-md">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-[#CCFF00]">HOUSING</span>
+<span class="font-numeric-data text-numeric-data">$2,100 / $2,500</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-[#FF4B89]">FOOD</span>
+<span class="font-numeric-data text-numeric-data">$640 / $800</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-[#00DBE9]">FUN</span>
+<span class="font-numeric-data text-numeric-data">$420 / $500</span>
+</div>
+</div>
+<!-- Concentric SVG Rings -->
+<div class="relative w-40 h-40">
+<svg class="w-full h-full" viewbox="0 0 120 120">
+<!-- Housing Ring -->
+<circle class="activity-ring-bg" cx="60" cy="60" r="50"></circle>
+<circle class="activity-ring-progress" cx="60" cy="60" r="50" stroke="#CCFF00" stroke-dasharray="264, 314"></circle>
+<!-- Food Ring -->
+<circle class="activity-ring-bg" cx="60" cy="60" r="36"></circle>
+<circle class="activity-ring-progress" cx="60" cy="60" r="36" stroke="#FF4B89" stroke-dasharray="180, 226"></circle>
+<!-- Fun Ring -->
+<circle class="activity-ring-bg" cx="60" cy="60" r="22"></circle>
+<circle class="activity-ring-progress" cx="60" cy="60" r="22" stroke="#00DBE9" stroke-dasharray="110, 138"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/20 text-3xl" data-icon="bolt">bolt</span>
+</div>
+</div>
+</section>
+<!-- Category Bento Grid -->
+<section class="grid grid-cols-2 gap-gutter">
+<div class="glass-card rounded-xl p-4 flex flex-col gap-sm">
+<div class="w-10 h-10 rounded-lg bg-[#CCFF00]/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#CCFF00]" data-icon="home">home</span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-white/60">HOUSING</h3>
+<p class="font-numeric-data text-numeric-data text-white">84%</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-4 flex flex-col gap-sm">
+<div class="w-10 h-10 rounded-lg bg-[#FF4B89]/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#FF4B89]" data-icon="restaurant">restaurant</span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-white/60">FOOD</h3>
+<p class="font-numeric-data text-numeric-data text-white">80%</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-4 flex flex-col gap-sm">
+<div class="w-10 h-10 rounded-lg bg-[#00DBE9]/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#00DBE9]" data-icon="sports_esports">sports_esports</span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-white/60">FUN</h3>
+<p class="font-numeric-data text-numeric-data text-white">72%</p>
+</div>
+</div>
+<div class="glass-card rounded-xl p-4 flex flex-col gap-sm border-dashed border-white/30 bg-transparent">
+<div class="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-white/40" data-icon="add">add</span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-white/40">NEW GOAL</h3>
+<p class="font-numeric-data text-numeric-data text-white/20">SET</p>
+</div>
+</div>
+</section>
+<!-- Recent Transactions -->
+<section class="flex flex-col gap-md">
+<div class="flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-white tracking-tight">Recent Activity</h2>
+<button class="font-label-caps text-[10px] text-[#CCFF00] uppercase tracking-widest">View All</button>
+</div>
+<div class="glass-card rounded-xl divide-y divide-white/5 overflow-hidden">
+<!-- Transaction 1 -->
+<div class="p-4 flex items-center justify-between active:bg-white/5 transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="shopping_bag">shopping_bag</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md font-bold text-white">Apple Store</span>
+<span class="text-[10px] font-label-caps text-white/40">TECH &amp; GEAR • 2:40 PM</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data text-white">-$1,299.00</span>
+<span class="px-2 py-0.5 rounded-full bg-error-container text-error text-[8px] font-black uppercase">Pending</span>
+</div>
+</div>
+<!-- Transaction 2 -->
+<div class="p-4 flex items-center justify-between active:bg-white/5 transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-[#CCFF00]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#CCFF00]" data-icon="fitness_center">fitness_center</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md font-bold text-white">Equinox Gym</span>
+<span class="text-[10px] font-label-caps text-white/40">HEALTH • 09:15 AM</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data text-white">-$250.00</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-[#CCFF00] text-[8px] font-black uppercase">Success</span>
+</div>
+</div>
+<!-- Transaction 3 -->
+<div class="p-4 flex items-center justify-between active:bg-white/5 transition-colors">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="payments">payments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md font-bold text-white">Salary Deposit</span>
+<span class="text-[10px] font-label-caps text-white/40">INCOME • YESTERDAY</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-numeric-data text-[#CCFF00]">+$8,500.00</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-container/20 text-[#CCFF00] text-[8px] font-black uppercase">Settled</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Achievements Section -->
+<section class="flex flex-col gap-md">
+<div class="flex justify-between items-end">
+<h2 class="font-headline-md text-headline-md text-white tracking-tight">Achievements</h2>
+<button class="font-label-caps text-[10px] text-[#CCFF00] uppercase tracking-widest">More</button>
+</div>
+<div class="grid grid-cols-3 gap-gutter">
+<!-- Badge 1 -->
+<div class="flex flex-col items-center gap-sm">
+<div class="badge-3d w-20 h-20 rounded-full bg-gradient-to-br from-[#CCFF00] to-[#88AA00] flex items-center justify-center border-2 border-[#CCFF00]/50">
+<span class="material-symbols-outlined text-black text-4xl" data-icon="avg_pace" style="font-variation-settings: 'FILL' 1;">avg_pace</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-[8px] leading-tight text-white/60">BUDGET STREAK</p>
+<p class="font-bold text-[10px] text-[#CCFF00]">(7 DAYS)</p>
+</div>
+</div>
+<!-- Badge 2 -->
+<div class="flex flex-col items-center gap-sm">
+<div class="badge-3d w-20 h-20 rounded-full bg-gradient-to-br from-[#FF4B89] to-[#992255] flex items-center justify-center border-2 border-[#FF4B89]/50">
+<span class="material-symbols-outlined text-black text-4xl" data-icon="workspace_premium" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-[8px] leading-tight text-white/60">SAVINGS GOAL</p>
+<p class="font-bold text-[10px] text-[#FF4B89]">MET</p>
+</div>
+</div>
+<!-- Badge 3 -->
+<div class="flex flex-col items-center gap-sm">
+<div class="badge-3d w-20 h-20 rounded-full bg-gradient-to-br from-[#00DBE9] to-[#006F77] flex items-center justify-center border-2 border-[#00DBE9]/50">
+<span class="material-symbols-outlined text-black text-4xl" data-icon="stars" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-[8px] leading-tight text-white/60">SMART</p>
+<p class="font-bold text-[10px] text-[#00DBE9]">SPENDER</p>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Action -->
+<button class="w-full bg-[#CCFF00] text-black font-black py-4 rounded-full active:scale-95 transition-all uppercase tracking-widest text-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+            Log New Expense
+        </button>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-t border-white/15 flex justify-around items-center px-4 pb-8 pt-3">
+<a class="flex flex-col items-center justify-center text-[#CCFF00] scale-105 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Summary</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Trends</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-bold text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

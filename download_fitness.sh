@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Dashboard
+curl -sL "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2EwMjk5MDI3ZDI2MTRiNGE5ZGZlN2M5ZjMwNGJjYTQwEgsSBxDrv6bYlQcYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTgwNDc3NzkwOTc1OTIzNzcyMw&filename=&opi=89354086" -o "src/raw_screens/Dashboard.html"
+
+# Login
+curl -sL "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sX2NiNzhiNTRjYzM0NDQ3ZDM4ZTZiMDU0ZWZhOWRjODlkEgsSBxDrv6bYlQcYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTgwNDc3NzkwOTc1OTIzNzcyMw&filename=&opi=89354086" -o "src/raw_screens/Login.html"
+
+# AddExpense
+curl -sL "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzFlMDM2ZmQ3NTNkZTQ2MGVhNTMyZDVmYjk4YjQ2NDkxEgsSBxDrv6bYlQcYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTgwNDc3NzkwOTc1OTIzNzcyMw&filename=&opi=89354086" -o "src/raw_screens/AddExpense.html"
+
+# ExpenseHistory
+curl -sL "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzQ0ZDQ4YWZkYWFjZTQ0MTliYTRjN2Y4MmUxMGMwNjhiEgsSBxDrv6bYlQcYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTgwNDc3NzkwOTc1OTIzNzcyMw&filename=&opi=89354086" -o "src/raw_screens/ExpenseHistory.html"
+
+# Reports
+curl -sL "https://contribution.usercontent.google.com/download?c=CgthaWRhX2NvZGVmeBJ8Eh1hcHBfY29tcGFuaW9uX2dlbmVyYXRlZF9maWxlcxpbCiVodG1sXzJiNjdlNmIwMTZlMjQyNTFiYTNiNDFmM2RhZDhiZWYxEgsSBxDrv6bYlQcYAZIBJAoKcHJvamVjdF9pZBIWQhQxNTgwNDc3NzkwOTc1OTIzNzcyMw&filename=&opi=89354086" -o "src/raw_screens/Reports.html"
