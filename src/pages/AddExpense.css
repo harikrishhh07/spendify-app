@@ -11,4 +11,112 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
             opacity: 0.05;
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                background-color: #000000;
+            }
+
+            main {
+                padding: 12px !important;
+                overflow-x: hidden;
+            }
+
+            .glass-card {
+                margin: 8px 0 !important;
+                padding: 16px !important;
+                border-radius: 12px;
+            }
+
+            /* Form elements */
+            input, select, textarea, button {
+                width: 100% !important;
+                padding: 12px 14px !important;
+                font-size: 16px;
+                border-radius: 10px;
+                min-height: 44px;
+            }
+
+            textarea {
+                min-height: 100px !important;
+                resize: vertical;
+            }
+
+            /* Stack form groups vertically */
+            form {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                display: block;
+                margin-bottom: 6px;
+                font-size: 14px;
+            }
+
+            /* Grid layouts to single column */
+            [class*="grid-cols-"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            [class*="flex-"] {
+                flex-direction: column !important;
+            }
+
+            /* Adjust button groups */
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+
+            /* Make text smaller */
+            .text-lg { font-size: 14px !important; }
+            .text-xl { font-size: 16px !important; }
+            .text-2xl { font-size: 18px !important; }
+            .text-3xl { font-size: 24px !important; }
+
+            /* Category selector */
+            .category-selector {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
+
+            .category-btn {
+                padding: 10px !important;
+                font-size: 12px;
+                min-height: 40px;
+            }
+        }
+
+        /* Tablet responsive */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            main {
+                padding: 16px !important;
+            }
+
+            .glass-card {
+                margin: 10px 0 !important;
+                padding: 18px !important;
+            }
+
+            input, select, textarea, button {
+                padding: 14px 16px !important;
+            }
+
+            .category-selector {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
     

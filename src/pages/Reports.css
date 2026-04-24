@@ -14,4 +14,114 @@
         .mask-chart {
             mask-image: linear-gradient(to top, rgba(0,0,0,0), rgba(0,0,0,1));
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                background-color: #000000;
+            }
+
+            main {
+                padding: 12px !important;
+                overflow-x: hidden;
+            }
+
+            .glass-card {
+                margin: 8px 0 !important;
+                padding: 12px !important;
+                border-radius: 12px;
+            }
+
+            /* SVG charts responsive */
+            svg {
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100%;
+            }
+
+            /* Grid layouts */
+            [class*="grid-cols-"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Flex layouts */
+            [class*="flex-"] {
+                flex-direction: column !important;
+                gap: 8px;
+            }
+
+            /* Chart containers */
+            .chart-container {
+                min-height: 200px;
+                width: 100%;
+            }
+
+            /* Stats row */
+            .stats-row {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .stat-item {
+                padding: 10px !important;
+                text-align: center;
+            }
+
+            /* Make text smaller on mobile */
+            .text-lg { font-size: 13px !important; }
+            .text-xl { font-size: 14px !important; }
+            .text-2xl { font-size: 16px !important; }
+            .text-3xl { font-size: 20px !important; }
+            .text-4xl { font-size: 24px !important; }
+
+            /* Button sizing */
+            button {
+                padding: 10px 14px !important;
+                font-size: 13px;
+                min-height: 40px;
+            }
+
+            /* Legend and controls */
+            .legend, .controls {
+                font-size: 12px;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+
+            .legend-item {
+                padding: 4px 8px;
+            }
+        }
+
+        /* Tablet responsive */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            main {
+                padding: 14px !important;
+            }
+
+            .glass-card {
+                margin: 10px 0 !important;
+                padding: 14px !important;
+            }
+
+            .chart-container {
+                min-height: 250px;
+            }
+
+            .stats-row {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            button {
+                padding: 12px 16px !important;
+            }
+        }
+
+        /* Desktop */
+        @media (min-width: 1025px) {
+            .stats-row {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
     

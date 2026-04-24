@@ -14,4 +14,97 @@
             margin-left: 56px;
             border-bottom: 1px solid rgba(44, 44, 46, 0.8);
         }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                background-color: #000000;
+                overflow-x: hidden;
+            }
+
+            main {
+                padding: 12px !important;
+            }
+
+            .glass-card {
+                margin: 8px 0 !important;
+                padding: 12px !important;
+                border-radius: 12px;
+            }
+
+            .inset-divider {
+                margin-left: 0 !important;
+                border-bottom: 1px solid rgba(44, 44, 46, 0.8);
+            }
+
+            /* List items */
+            .transaction-item, .list-item {
+                padding: 12px 10px !important;
+                margin: 8px 0 !important;
+            }
+
+            /* Stack flex layouts vertically */
+            [class*="flex-"] {
+                flex-direction: column !important;
+                gap: 8px;
+            }
+
+            /* Table responsiveness */
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px 6px !important;
+            }
+
+            /* Filter controls */
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .filter-group input,
+            .filter-group select,
+            .filter-group button {
+                width: 100%;
+                padding: 10px !important;
+                font-size: 14px;
+                border-radius: 8px;
+                min-height: 40px;
+            }
+
+            /* Make text smaller on mobile */
+            .text-lg { font-size: 14px !important; }
+            .text-xl { font-size: 16px !important; }
+            .text-2xl { font-size: 18px !important; }
+            .text-3xl { font-size: 20px !important; }
+
+            /* Adjust column widths for mobile */
+            [class*="w-1/"] {
+                width: 100% !important;
+            }
+        }
+
+        /* Tablet responsive */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            main {
+                padding: 14px !important;
+            }
+
+            .glass-card {
+                margin: 10px 0 !important;
+                padding: 14px !important;
+            }
+
+            .transaction-item, .list-item {
+                padding: 12px !important;
+            }
+
+            table {
+                font-size: 13px;
+            }
+        }
     
