@@ -5,30 +5,8 @@ export default function CustomCursor() {
   const dotRef = useRef(null);
   const positionRef = useRef({ x: 0, y: 0 });
   const [isActive, setIsActive] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if device is mobile
-    const checkIfMobile = () => {
-      const isMobileDevice = window.innerWidth <= 768 || 
-                            /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      setIsMobile(isMobileDevice);
-    };
-
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-
-    return () => {
-      window.removeEventListener('resize', checkIfMobile);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Only add mouse event listeners on desktop
-    if (isMobile) {
-      return;
-    }
-
     const handleMouseMove = (e) => {
       positionRef.current = { x: e.clientX, y: e.clientY };
       
@@ -57,12 +35,7 @@ export default function CustomCursor() {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isMobile]);
-
-  // Don't render custom cursor on mobile devices
-  if (isMobile) {
-    return null;
-  }
+  }, []);
 
   return (
     <>
