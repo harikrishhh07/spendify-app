@@ -208,6 +208,15 @@ export const ExpenseProvider = ({ children }) => {
     setInitialBalance(amount);
   };
 
+  const resetData = () => {
+    setTransactions(initialTransactions);
+    setGoals([]);
+    setInitialBalance(50000);
+    localStorage.removeItem('spendify_transactions_v2');
+    localStorage.removeItem('spendify_goals_v2');
+    localStorage.removeItem('spendify_initial_balance');
+  };
+
   const totalExpensesAmount = transactions.reduce((acc, curr) => {
     return curr.type === 'expense' ? acc + curr.amount : acc;
   }, 0);
@@ -255,7 +264,8 @@ export const ExpenseProvider = ({ children }) => {
       addTransaction,
       deleteTransaction,
       addGoal,
-      setBalance
+      setBalance,
+      resetData
     }}>
       {children}
     </ExpenseContext.Provider>

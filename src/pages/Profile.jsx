@@ -5,12 +5,12 @@ import { useAuth } from '../context/AuthContext';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const { achievements } = useExpenses();
+  const { achievements, resetData } = useExpenses();
   const { currentUser, logout } = useAuth();
 
   const handleResetData = () => {
     if (window.confirm("Are you sure you want to delete all transactions and reset your account?")) {
-      localStorage.removeItem('spendify_transactions');
+      resetData();
       window.location.reload();
     }
   };
