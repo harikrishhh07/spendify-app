@@ -10,7 +10,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const loginWithGoogle = () => {
     return signInWithPopup(auth, googleProvider);
@@ -23,7 +23,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
-      setLoading(false);
+      setAuthLoading(false);
     });
 
     return unsubscribe;
@@ -31,13 +31,14 @@ export function AuthProvider({ children }) {
 
   const value = {
     currentUser,
+    authLoading,
     loginWithGoogle,
     logout
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {!authLoading && children}
     </AuthContext.Provider>
   );
 }
