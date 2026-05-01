@@ -22,15 +22,58 @@ export default function AddExpense() {
     }
   }, []);
 
-  const handleKeyPress = (key) => {
-    if (key === 'backspace') {
-      setAmount(prev => prev.length > 1 ? prev.slice(0, -1) : '0');
-    } else if (key === '.') {
-      if (!amount.includes('.')) setAmount(prev => prev + key);
-    } else {
-      if (amount === '0') setAmount(key);
-      else setAmount(prev => prev + key);
-    }
+  useEffect(() => {
+    // Fetch categories and payment methods
+    const fetchOptions = async () => {
+      try {
+        const [catRes, payRes] = await Promise.all([
+          fetch('http://127.0.0.1:5000/api/categories'),
+          fetch('http://127.0.0.1:5000/api/users') // To get payment methods for user, but we'll hardcode or assume for now if not available
+        ]);
+        
+        if (catRes.ok) {
+          const catData = await catRes.json();
+          setCategories(catData);
+          if (catData.length > 0) {
+            setCategoryId(catData[0].id);
+          }
+        }
+        
+        // Mock payment methods since we didn't expose an explicit endpoint in routes.py 
+        // (we could add it, but for UI sake we'll mock based on Seed data)
+        const mockPayments = [
+          { id: 1, name: 'Cash' },
+          { id: 2, name: 'Credit Card' },
+          { id: 3, name: 'UPI' }
+        ];
+        setPaymentMethods(mockPayments);
+        setPaymentId(mockPayments[0].id);
+        
+      } catch (err) {
+        console.error("Failed to fetch form options:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchOptions();
+  }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!amount || amount <= 0) return;
+    
+    await addTransaction({
+      type,
+      amount,
+      description,
+      date,
+      categoryId: type === 'expense' ? categoryId : 4, // 4 is Salary in our seed
+      paymentId: type === 'expense' ? paymentId : null
+    });
+    
+    navigate('/dashboard');
   };
 
   const handleSetBalance = () => {
@@ -138,77 +181,84 @@ Income
 )}
 </section>
 
-<section className="grid grid-cols-4 gap-sm">
-<div onClick={() => setCategory('Food')} className="flex flex-col items-center gap-xs cursor-pointer">
-<div className={`w-14 h-14 rounded-full flex items-center justify-center glass-card ${category === 'Food' ? 'border-[#CCFF00] ring-1 ring-[#CCFF00]/30' : ''}`}>
-<span className={`material-symbols-outlined ${category === 'Food' ? 'text-[#CCFF00]' : 'text-white'}`} data-icon="restaurant" style={{fontVariationSettings: "'FILL' 1"}}>restaurant</span>
-</div>
-<span className={`font-label-caps text-[10px] ${category === 'Food' ? 'text-white' : 'text-white/60'}`}>FOOD</span>
-</div>
-<div onClick={() => setCategory('Transport')} className="flex flex-col items-center gap-xs cursor-pointer">
-<div className={`w-14 h-14 rounded-full flex items-center justify-center glass-card ${category === 'Transport' ? 'border-[#CCFF00] ring-1 ring-[#CCFF00]/30' : ''}`}>
-<span className={`material-symbols-outlined ${category === 'Transport' ? 'text-[#CCFF00]' : 'text-white'}`} data-icon="directions_car">directions_car</span>
-</div>
-<span className={`font-label-caps text-[10px] ${category === 'Transport' ? 'text-white' : 'text-white/60'}`}>TRAVEL</span>
-</div>
-<div onClick={() => setCategory('Housing')} className="flex flex-col items-center gap-xs cursor-pointer">
-<div className={`w-14 h-14 rounded-full flex items-center justify-center glass-card ${category === 'Housing' ? 'border-[#CCFF00] ring-1 ring-[#CCFF00]/30' : ''}`}>
-<span className={`material-symbols-outlined ${category === 'Housing' ? 'text-[#CCFF00]' : 'text-white'}`} data-icon="home">home</span>
-</div>
-<span className={`font-label-caps text-[10px] ${category === 'Housing' ? 'text-white' : 'text-white/60'}`}>HOUSING</span>
-</div>
-<div onClick={() => setCategory('Fun')} className="flex flex-col items-center gap-xs cursor-pointer">
-<div className={`w-14 h-14 rounded-full flex items-center justify-center glass-card ${category === 'Fun' ? 'border-[#CCFF00] ring-1 ring-[#CCFF00]/30' : ''}`}>
-<span className={`material-symbols-outlined ${category === 'Fun' ? 'text-[#CCFF00]' : 'text-white'}`} data-icon="sports_esports">sports_esports</span>
-</div>
-<span className={`font-label-caps text-[10px] ${category === 'Fun' ? 'text-white' : 'text-white/60'}`}>FUN</span>
-</div>
-</section>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-red-300 mb-2">Amount (₹)</label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-red-400 text-lg">₹</span>
+              <input
+                type="number"
+                required
+                min="1"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full bg-red-500/10 border-2 border-red-500/30 rounded-xl py-3 pl-10 pr-4 text-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all placeholder:text-red-300/40 hover:border-red-500/50"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
 
-<section className="flex flex-col gap-md">
-<div className="glass-card p-md rounded-xl flex items-center justify-between">
-<div className="flex flex-col w-full">
-<span className="font-label-caps text-label-caps text-white/40">MERCHANT</span>
-<input 
-  type="text" 
-  value={merchant} 
-  onChange={(e) => setMerchant(e.target.value)} 
-  placeholder="Enter merchant name..." 
-  className="bg-transparent border-none outline-none font-body-lg text-body-lg text-white w-full placeholder-white/20 mt-1"
-/>
-</div>
-<span className="material-symbols-outlined text-white/20">edit</span>
-</div>
-<div className="glass-card p-md rounded-xl flex items-center justify-between">
-<div className="flex flex-col w-full">
-<span className="font-label-caps text-label-caps text-white/40">DATE</span>
-<input 
-  type="date" 
-  value={expenseDate} 
-  onChange={(e) => setExpenseDate(e.target.value)} 
-  className="bg-transparent border-none outline-none font-body-lg text-body-lg text-white w-full mt-1"
-  style={{ colorScheme: 'dark' }}
-/>
-</div>
-<span className="material-symbols-outlined text-white/20">calendar_today</span>
-</div>
-</section>
+          <div>
+            <label className="block text-sm font-medium text-red-300 mb-2">Description / Source</label>
+            <input
+              type="text"
+              required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full bg-red-500/10 border-2 border-red-500/30 rounded-xl py-3 px-4 text-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all placeholder:text-red-300/40 hover:border-red-500/50"
+              placeholder={type === 'expense' ? "e.g., Coffee, Groceries" : "e.g., Salary, Freelance"}
+            />
+          </div>
 
-<section className="grid grid-cols-3 gap-sm mt-md">
-{['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0'].map(num => (
-  <button key={num} onClick={() => handleKeyPress(num)} className="h-16 flex items-center justify-center rounded-lg active:bg-white/10 transition-colors">
-    <span className="font-numeric-data text-headline-md text-white">{num}</span>
-  </button>
-))}
-<button onClick={() => handleKeyPress('backspace')} className="h-16 flex items-center justify-center rounded-lg active:bg-white/10 transition-colors">
-<span className="material-symbols-outlined text-white" data-icon="backspace">backspace</span>
-</button>
-</section>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-red-300 mb-2">Date</label>
+              <input
+                type="date"
+                required
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full bg-red-500/10 border-2 border-red-500/30 rounded-xl py-3 px-4 text-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all [color-scheme:dark] hover:border-red-500/50"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-red-300 mb-2">Category</label>
+              <select
+                required
+                value={categoryId}
+                onChange={(e) => setCategoryId(Number(e.target.value))}
+                className="w-full bg-red-500/10 border-2 border-red-500/30 rounded-xl py-3 px-4 text-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all appearance-none hover:border-red-500/50"
+              >
+                {filteredCategories.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-<button onClick={handleSave} className="w-full h-14 bg-[#CCFF00] rounded-full flex items-center justify-center active:scale-95 transition-all shadow-[0_0_20px_rgba(204,255,0,0.3)] mt-8">
-<span className="font-label-caps text-black font-black uppercase tracking-widest">SAVE TRANSACTION</span>
-</button>
-</main>
+          {type === 'expense' && (
+            <div>
+              <label className="block text-sm font-medium text-yellow-300 mb-2">Payment Method</label>
+              <div className="grid grid-cols-3 gap-3">
+                {paymentMethods.map(pm => (
+                  <button
+                    key={pm.id}
+                    type="button"
+                    onClick={() => setPaymentId(pm.id)}
+                    className={`py-3 px-2 rounded-xl text-sm font-medium transition-all duration-200 border ${
+                      paymentId === pm.id 
+                        ? 'bg-yellow-500/20 border-yellow-500 text-yellow-300 shadow-lg shadow-yellow-500/20' 
+                        : 'bg-yellow-500/5 border-yellow-500/30 text-yellow-300 hover:bg-yellow-500/10 hover:border-yellow-500/50'
+                    }`}
+                  >
+                    {pm.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
 <nav className="fixed bottom-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-t border-white/15 flex justify-around items-center px-4 pb-8 pt-3">
 <Link to="/dashboard" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">

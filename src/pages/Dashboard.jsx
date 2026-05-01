@@ -1,5 +1,4 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useExpenses } from '../context/ExpenseContext';
 import { useAuth } from '../context/AuthContext';
 import LiveClock from '../components/LiveClock';
@@ -9,30 +8,33 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { transactions, totalBalance, budgets, achievements, smartInsights, subscriptions, budgetAlerts } = useExpenses();
   const { currentUser } = useAuth();
+  const { summary, refreshData } = useExpenses();
 
-  const getCategoryTotal = (category) => {
-    return transactions.filter(t => t.type === 'expense' && t.category === category).reduce((acc, curr) => acc + curr.amount, 0);
-  };
+  useEffect(() => {
+    refreshData();
+  }, [refreshData]);
 
-  const housingSpent = getCategoryTotal('Housing');
-  const foodSpent = getCategoryTotal('Food');
-  const funSpent = getCategoryTotal('Fun');
-
-  const getProgress = (spent, budget, radius) => {
-    const circumference = 2 * Math.PI * radius;
-    const percentage = Math.min(spent / (budget || 1), 1);
-    return `${circumference * percentage}, ${circumference}`;
-  };
-
-  const getPercentage = (spent, budget) => {
-    return Math.round((spent / (budget || 1)) * 100);
-  };
-
-  const recentActivity = transactions.slice(0, 3);
+  const stats = [
+    { label: 'Total Balance', value: summary.netBalance, color: 'text-yellow-300', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20' },
+    { label: 'Total Income', value: summary.totalIncome, color: 'text-teal-400', bg: 'bg-teal-500/10', border: 'border-teal-500/20' },
+    { label: 'Total Expense', value: summary.totalExpense, color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/20' },
+  ];
 
   return (
     <>
-      
+      <DashboardThreeBackground />
+      <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 relative z-10">
+        <header className="mb-12">
+          <div className="relative">
+            <div className="absolute -top-4 -left-4 w-72 h-72 bg-yellow-600/20 rounded-full filter blur-3xl opacity-20 pointer-events-none"></div>
+            <div className="relative">
+              <h1 className="text-5xl font-black tracking-tight mb-3 bg-linear-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+                LEVEL UP YOUR WEALTH
+              </h1>
+              <p className="text-lg text-yellow-200 max-w-2xl">Elite financial performance tracking, engineered for your personal capital management.</p>
+            </div>
+          </div>
+        </header>
 
 <header className="fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
 <div className="flex items-center gap-2">
@@ -310,6 +312,72 @@ recentActivity.map(t => (
 </Link>
 </nav>
 
+        {/* Budget Status */}
+        <div className="relative group">
+          <div className="absolute inset-0 bg-linear-to-r from-teal-600/20 to-teal-600/20 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+          <div className="relative glass-panel p-8 rounded-2xl border border-teal-500/20 backdrop-blur-xl hover:border-teal-500/40 transition-all duration-300">
+            <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+              <span className="p-3 bg-teal-500/20 rounded-xl text-teal-400">
+                <Target size={24} />
+              </span>
+              <span className="bg-linear-to-r from-teal-400 to-teal-300 bg-clip-text text-transparent">Budget Status</span>
+            </h2>
+            {summary.budgetLimit > 0 ? (
+              <div className="flex flex-col items-center justify-center h-full py-8">
+                <div className="relative w-56 h-56 flex items-center justify-center mb-8">
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(30, 41, 59, 0.5)" strokeWidth="8" />
+                    <circle 
+                      cx="50" cy="50" r="45" fill="none" 
+                      stroke="url(#gradient)" strokeWidth="8" 
+                      strokeDasharray={`${Math.min((summary.totalExpense / summary.budgetLimit) * 283, 283)} 283`}
+                      strokeLinecap="round"
+                      className="transition-all duration-1000 ease-out filter drop-shadow-lg drop-shadow-emerald-500/50"
+                    />
+                    <defs>
+                      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#10b981" />
+                        <stop offset="50%" stopColor="#14b8a6" />
+                        <stop offset="100%" stopColor="#06b6d4" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <div className="absolute flex flex-col items-center">
+                    <span className="text-4xl font-black bg-linear-to-r from-teal-400 to-teal-300 bg-clip-text text-transparent">
+                      {Math.round((summary.totalExpense / summary.budgetLimit) * 100)}%
+                    </span>
+                    <span className="text-xs font-bold text-yellow-300 mt-2 uppercase tracking-widest">Used</span>
+                  </div>
+                </div>
+                <div className="w-full text-center">
+                  <p className="text-yellow-300 text-sm mb-4">Monthly Spending</p>
+                  <p className="text-2xl font-bold text-yellow-100">
+                    <span className="text-teal-400">₹{summary.totalExpense.toLocaleString()}</span>
+                    <span className="text-yellow-400"> / </span>
+                    <span className="text-yellow-200">₹{summary.budgetLimit.toLocaleString()}</span>
+                  </p>
+                  <div className="mt-4 h-1.5 w-full bg-slate-800/50 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-linear-to-r from-teal-500 via-teal-400 to-teal-300 transition-all duration-1000" 
+                      style={{ width: `${Math.min((summary.totalExpense / summary.budgetLimit) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                  <p className="mt-4 text-xs text-yellow-300">
+                    {summary.budgetLimit - summary.totalExpense > 0 
+                      ? `₹${(summary.budgetLimit - summary.totalExpense).toLocaleString()} remaining` 
+                      : `₹${(summary.totalExpense - summary.budgetLimit).toLocaleString()} over budget`}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="h-40 flex items-center justify-center text-yellow-300 border border-dashed border-yellow-500/30 rounded-xl">
+                No budget set for this month.
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+      </div>
     </>
   );
 }

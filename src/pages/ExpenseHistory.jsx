@@ -1,50 +1,91 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
 import LiveClock from '../components/LiveClock';
 import './ExpenseHistory.css';
 
 export default function ExpenseHistory() {
-  const navigate = useNavigate();
-  const { transactions } = useExpenses();
-  const [searchQuery, setSearchQuery] = useState('');
+  const { transactions, deleteTransaction } = useExpenses();
+  const { currentUser } = useAuth();
+  const [filter, setFilter] = useState('all');
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const filteredTransactions = transactions.filter(t => 
-    t.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    t.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTransactions = transactions.filter(t => {
+    if (filter === 'all') return true;
+    return t.type === filter;
+  });
 
-  const downloadCSV = () => {
-    const headers = ["Date", "Name", "Category", "Type", "Amount"];
-    const csvContent = [
-      headers.join(","),
-      ...transactions.map(t => 
-        `"${new Date(t.date).toLocaleString()}","${t.name}","${t.category}","${t.type}",${t.amount}`
-      )
-    ].join("\n");
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "spendify_transactions.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadPDF = async () => {
+    if (!currentUser?.sqlUserId) return;
+    
+    setIsDownloading(true);
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/api/transactions/export-pdf/${currentUser.sqlUserId}`);
+      if (!response.ok) throw new Error('Failed to download PDF');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Spendify_Transactions_${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to download PDF');
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
-  const groupedTransactions = filteredTransactions.reduce((groups, transaction) => {
-    const dateStr = new Date(transaction.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase();
-    if (!groups[dateStr]) {
-      groups[dateStr] = [];
-    }
-    groups[dateStr].push(transaction);
-    return groups;
-  }, {});
-
   return (
-    <>
-      
+    <div className="max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <header className="mb-12">
+        <div className="relative mb-8">
+          <div className="absolute -top-4 -left-4 w-72 h-72 bg-yellow-600/20 rounded-full filter blur-3xl opacity-20 pointer-events-none"></div>
+          <div className="relative">
+            <h1 className="text-4xl font-black tracking-tight mb-2 bg-linear-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+              TRANSACTION HISTORY
+            </h1>
+            <p className="text-yellow-200">Track and manage all your financial transactions in real-time.</p>
+          </div>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="flex gap-2 bg-yellow-500/10 p-1.5 rounded-2xl border border-yellow-500/30 backdrop-blur-sm">
+            {['all', 'income', 'expense'].map(f => (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className={`px-4 py-2.5 text-sm font-bold rounded-xl capitalize transition-all ${
+                  filter === f 
+                    ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white shadow-lg shadow-yellow-500/30' 
+                    : 'text-yellow-300 hover:text-yellow-200 hover:bg-yellow-500/10'
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  {f === 'all' ? <BarChart2 size={16} /> : f === 'income' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                  {f}
+                </span>
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isDownloading}
+            className="px-6 py-2.5 text-sm font-bold rounded-xl bg-gradient-to-r from-slate-800 to-slate-900 border border-yellow-500/50 text-yellow-400 hover:from-slate-700 hover:to-slate-800 hover:text-yellow-300 transition-all shadow-lg shadow-yellow-500/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transform hover:scale-105 active:scale-95"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            {isDownloading ? <><Loader2 size={18} className="animate-spin" /> Downloading...</> : <><Download size={18} /> Download PDF</>}
+          </button>
+        </div>
+      </header>
 
 <header className="fixed top-0 z-50 w-full bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
 <div className="flex items-center gap-3">
@@ -61,66 +102,28 @@ export default function ExpenseHistory() {
 </div>
 </header>
 
-<main className="pt-24 px-margin-mobile">
-
-<div className="mb-lg flex gap-2">
-<div className="relative flex items-center flex-1">
-<span className="material-symbols-outlined absolute left-4 text-white/40">search</span>
-<input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-[#1C1C1E] border border-white/10 rounded-xl py-3 pl-12 pr-4 font-body-md text-white placeholder-white/30 focus:outline-none focus:ring-1 focus:ring-[#CCFF00]/50 transition-all" placeholder="Search transactions..." type="text"/>
-</div>
-<button onClick={downloadCSV} className="bg-[#CCFF00]/10 text-[#CCFF00] px-4 rounded-xl flex items-center justify-center border border-[#CCFF00]/20 hover:bg-[#CCFF00]/20 active:scale-95 transition-all" title="Download CSV">
-<span className="material-symbols-outlined">download</span>
-</button>
-</div>
-
-<section className="space-y-xl">
-{Object.keys(groupedTransactions).map(dateStr => (
-  <div key={dateStr} className="space-y-md">
-  <h2 className="font-label-caps text-label-caps text-white/40 px-2">{dateStr}</h2>
-  <div className="glass-card rounded-2xl overflow-hidden divide-y divide-white/5">
-  
-  {groupedTransactions[dateStr].map(t => (
-    <div key={t.id} className="flex items-center justify-between p-4 active:bg-white/5 transition-colors">
-    <div className="flex items-center gap-4">
-    <div className="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center">
-    <span className="material-symbols-outlined text-[#CCFF00]">{t.type === 'income' ? 'payments' : 'shopping_cart'}</span>
+                <div className="flex items-center justify-between md:justify-end gap-6 ml-0 md:ml-0">
+                  <span className={`text-2xl font-black tracking-tight ${
+                    t.type === 'income' ? 'text-teal-400' : 'text-red-400'
+                  }`}>
+                    {t.type === 'income' ? '+' : '-'}₹{Number(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  </span>
+                  
+                  {t.type === 'expense' && (
+                    <button
+                      onClick={() => deleteTransaction(t.id, t.type)}
+                      className="p-2 text-yellow-300 hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-all opacity-0 group-hover:opacity-100 hover:scale-110"
+                      title="Delete Expense"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-    <div className="flex flex-col">
-    <span className="font-body-md text-white font-bold">{t.name}</span>
-    <span className="font-label-caps text-[10px] text-white/40">{t.category.toUpperCase()} • {new Date(t.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-    </div>
-    </div>
-    <span className={`font-numeric-data text-numeric-data ${t.type === 'income' ? 'text-[#CCFF00]' : 'text-white'}`}>
-      {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(t.amount)}
-    </span>
-    </div>
-  ))}
-
-  </div>
-  </div>
-))}
-</section>
-</main>
-
-<nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-3 bg-black/70 backdrop-blur-[20px] border-t border-white/15">
-<Link to="/dashboard" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-<span className="material-symbols-outlined">analytics</span>
-<span className="font-bold text-[10px] uppercase tracking-widest mt-1">Summary</span>
-</Link>
-<Link to="/reports" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-<span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>monitoring</span>
-<span className="font-bold text-[10px] uppercase tracking-widest mt-1">Trends</span>
-</Link>
-<Link to="/expense-history" className="flex flex-col items-center justify-center text-[#CCFF00] scale-105 active:scale-90 duration-200">
-<span className="material-symbols-outlined">account_balance_wallet</span>
-<span className="font-bold text-[10px] uppercase tracking-widest mt-1">History</span>
-</Link>
-<Link to="/profile" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-<span className="material-symbols-outlined">person</span>
-<span className="font-bold text-[10px] uppercase tracking-widest mt-1">Profile</span>
-</Link>
-</nav>
-
-    </>
   );
 }

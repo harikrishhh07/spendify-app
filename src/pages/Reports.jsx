@@ -1,31 +1,92 @@
 import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
 import LiveClock from '../components/LiveClock';
 import './Reports.css';
 
 export default function Reports() {
-  const navigate = useNavigate();
-  const { transactions, totalExpenses } = useExpenses();
+  const { summary } = useExpenses();
 
-  const averageDailySpend = totalExpenses / 30;
-
-  const getCategoryTotal = (category) => {
-    return transactions.filter(t => t.type === 'expense' && t.category === category).reduce((acc, curr) => acc + curr.amount, 0);
-  };
-  
-  const housingSpent = getCategoryTotal('Housing');
-  const foodSpent = getCategoryTotal('Food');
-  const funSpent = getCategoryTotal('Fun');
-  const transportSpent = getCategoryTotal('Transport');
-  const otherSpent = getCategoryTotal('Other');
-
-  const maxSpent = Math.max(housingSpent, foodSpent, funSpent, transportSpent, otherSpent, 1);
-  const getHeight = (amount) => `${Math.max((amount / maxSpent) * 100, 10)}%`;
+  const averageDailySpend = summary.totalExpense / 30;
 
   return (
-    <>
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <header>
+        <h1 className="text-3xl font-bold text-yellow-300 mb-2">Trends & Reports</h1>
+        <p className="text-yellow-200">Deep dive into your financial habits.</p>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        {/* Daily Spend */}
+        <div className="glass-panel p-6 flex flex-col justify-center min-h-[200px]">
+          <h3 className="text-sm font-medium text-yellow-300 mb-2 uppercase tracking-wider">Average Daily Spend</h3>
+          <div className="flex items-baseline gap-2">
+            <span className="text-4xl font-bold text-yellow-400">
+              ₹{averageDailySpend.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            </span>
+            <span className="text-yellow-200">/ day</span>
+          </div>
+          <p className="text-sm text-yellow-200 mt-4">Based on your 30-day activity</p>
+        </div>
+
+        {/* Peak Performance */}
+        <div className="glass-panel p-6 flex flex-col justify-center min-h-[200px]">
+          <h3 className="text-sm font-medium text-yellow-300 mb-4 uppercase tracking-wider">Top Spending Category</h3>
+          {summary.categoryBreakdown && summary.categoryBreakdown.length > 0 ? (
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-2xl font-bold text-yellow-100 block">
+                  {summary.categoryBreakdown.reduce((prev, current) => (prev.amount > current.amount) ? prev : current).category}
+                </span>
+                <span className="text-yellow-200 text-sm mt-1 block">Highest volume this month</span>
+              </div>
+              <div className="w-12 h-12 rounded-2xl bg-red-500/20 flex items-center justify-center text-red-400 text-2xl">
+                <TrendingUp size={24} />
+              </div>
+            </div>
+          ) : (
+            <div className="text-yellow-200">No data available</div>
+          )}
+        </div>
+      </div>
+
+      <div className="glass-panel p-6">
+        <div className="flex justify-between items-end mb-8">
+          <div>
+            <h2 className="text-xl font-semibold text-white">Cash Flow Velocity</h2>
+            <p className="text-sm text-yellow-300 mt-1">Income vs Expense trajectory</p>
+          </div>
+        </div>
+
+        <div className="relative h-64 w-full flex items-end justify-between gap-4 px-4 pb-8 border-b border-slate-700/50">
+          {/* Simple Mock Bar Chart since we only have summary totals */}
+          <div className="w-1/3 flex flex-col items-center gap-2 group">
+            <div 
+              className="w-full bg-teal-500/80 hover:bg-teal-400 rounded-t-xl transition-all relative overflow-hidden"
+              style={{ height: `${Math.max((summary.totalIncome / (Math.max(summary.totalIncome, summary.totalExpense) || 1)) * 100, 10)}%` }}
+            >
+              <div className="absolute inset-0 bg-linear-to-t from-teal-600/50 to-transparent"></div>
+            </div>
+            <span className="text-teal-400 font-medium">Income</span>
+            <span className="text-xs text-yellow-300">₹{summary.totalIncome.toLocaleString()}</span>
+          </div>
+
+          <div className="w-1/3 flex flex-col items-center gap-2 group">
+            <div 
+              className="w-full bg-red-500/80 hover:bg-red-400 rounded-t-xl transition-all relative overflow-hidden"
+              style={{ height: `${Math.max((summary.totalExpense / (Math.max(summary.totalIncome, summary.totalExpense) || 1)) * 100, 10)}%` }}
+            >
+              <div className="absolute inset-0 bg-linear-to-t from-red-600/50 to-transparent"></div>
+            </div>
+            <span className="text-red-400 font-medium">Expense</span>
+            <span className="text-xs text-yellow-300">₹{summary.totalExpense.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
       
+      <div className="glass-panel p-6 text-center text-yellow-300 py-12 border border-dashed border-slate-700/50">
+        <p className="flex items-center justify-center gap-2">Detailed monthly breakdown and AI insights coming soon! <Rocket size={18} /></p>
+      </div>
 
 <header className="fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
 <div className="flex items-center gap-3">

@@ -1,119 +1,168 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
+import { Sparkles, Target, Calendar } from 'lucide-react';
 
 export default function Goals() {
-  const navigate = useNavigate();
-  const { goals, addGoal, totalBalance } = useExpenses();
+  const { goals, addGoal, summary } = useExpenses();
   const [goalName, setGoalName] = useState('');
-  const [targetAmount, setTargetAmount] = useState('');
+  const [amount, setAmount] = useState('');
 
-  const handleSaveGoal = () => {
-    if (goalName && parseFloat(targetAmount) > 0) {
-      addGoal({
-        name: goalName,
-        targetAmount: parseFloat(targetAmount),
-      });
-      setGoalName('');
-      setTargetAmount('');
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!goalName || !amount) return;
+    addGoal({ goalName, amount: Number(amount) });
+    setGoalName('');
+    setAmount('');
   };
 
-  return (
-    <>
-      <div className="fixed inset-0 bg-noise pointer-events-none"></div>
+  const totalBalance = summary.netBalance || 0;
 
-      <header className="fixed top-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-b border-white/15 flex justify-between items-center px-5 py-4">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="active:scale-95 transition-all text-[#CCFF00]">
-            <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 0"}}>arrow_back</span>
-          </button>
-          <h1 className="font-black tracking-tighter uppercase text-lg text-[#CCFF00]">GOALS</h1>
+  return (
+    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <header className="mb-12">
+        <div className="relative">
+          <div className="absolute -top-4 -left-4 w-72 h-72 bg-yellow-600/20 rounded-full filter blur-3xl opacity-20 pointer-events-none"></div>
+          <div className="relative">
+            <h1 className="text-5xl font-black tracking-tight mb-3 bg-linear-to-r from-yellow-300 via-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+              GOALS & BUDGETS
+            </h1>
+            <p className="text-lg text-yellow-200">Set ambitious targets and track your progress towards financial freedom with precision.</p>
+          </div>
         </div>
       </header>
 
-      <main className="pt-24 pb-32 px-margin-mobile flex flex-col gap-xl max-w-lg mx-auto">
-        <section className="flex flex-col gap-md">
-          <h2 className="font-headline-md text-headline-md text-white tracking-tight">Set New Goal</h2>
-          <div className="glass-card p-md rounded-xl flex flex-col gap-sm">
-            <div className="flex flex-col w-full">
-              <span className="font-label-caps text-label-caps text-white/40">GOAL NAME</span>
-              <input 
-                type="text" 
-                value={goalName} 
-                onChange={(e) => setGoalName(e.target.value)} 
-                placeholder="e.g. New Laptop" 
-                className="bg-transparent border-none outline-none font-body-lg text-body-lg text-white w-full placeholder-white/20 mt-1"
-              />
-            </div>
-            <div className="h-px bg-white/10 w-full my-2"></div>
-            <div className="flex flex-col w-full">
-              <span className="font-label-caps text-label-caps text-white/40">TARGET AMOUNT</span>
-              <div className="flex items-center gap-2">
-                <span className="text-white/40">₹</span>
-                <input 
-                  type="number" 
-                  value={targetAmount} 
-                  onChange={(e) => setTargetAmount(e.target.value)} 
-                  placeholder="0.00" 
-                  className="bg-transparent border-none outline-none font-body-lg text-body-lg text-white w-full placeholder-white/20 mt-1"
-                />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* Add Goal Form */}
+        <div className="lg:col-span-1">
+          <div className="relative group">
+            <div className="absolute inset-0 bg-linear-to-r from-yellow-600/20 to-yellow-600/20 rounded-2xl blur-lg opacity-40 group-hover:opacity-60 transition-opacity duration-300"></div>
+            <div className="relative goals-panel p-8 rounded-2xl backdrop-blur-xl transition-all duration-300">
+              {/* Header with gradient background */}
+              <div className="mb-8 -mx-8 -mt-8 px-8 pt-8 pb-6 bg-gradient-to-r from-yellow-600/20 via-yellow-500/10 to-transparent rounded-t-2xl border-b border-yellow-500/30">
+                <h2 className="text-2xl font-bold mb-2 flex items-center gap-3 text-yellow-300">
+                  <span className="p-3 bg-yellow-500/20 rounded-xl text-yellow-400"><Sparkles size={24} /></span>
+                  Create Goal
+                </h2>
+                <p className="text-sm text-yellow-200">Set and track your savings goals</p>
               </div>
-            </div>
-            <button onClick={handleSaveGoal} className="w-full h-12 mt-4 bg-[#CCFF00] rounded-lg flex items-center justify-center active:scale-95 transition-all">
-              <span className="font-label-caps text-black font-black uppercase tracking-widest">SAVE GOAL</span>
-            </button>
-          </div>
-        </section>
 
-        <section className="flex flex-col gap-md">
-          <h2 className="font-headline-md text-headline-md text-white tracking-tight">Active Goals</h2>
-          {goals.length === 0 ? (
-            <div className="text-white/40 text-sm text-center py-8">No active goals yet.</div>
-          ) : (
-            goals.map(goal => {
-              const progress = Math.min((totalBalance / goal.targetAmount) * 100, 100);
-              return (
-                <div key={goal.id} className="glass-card p-4 rounded-xl flex flex-col gap-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="font-body-lg font-bold text-white">{goal.name}</span>
-                    <span className="font-numeric-data text-[#CCFF00]">₹{goal.targetAmount.toLocaleString()}</span>
-                  </div>
-                  <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-[#CCFF00] to-[#88AA00]"
-                      style={{ width: `${progress}%` }}
-                    ></div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="font-label-caps text-[10px] text-white/40">PROGRESS</span>
-                    <span className="font-label-caps text-[10px] text-white">{progress.toFixed(0)}%</span>
-                  </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-bold text-yellow-300 mb-3 uppercase tracking-wider">Goal Name</label>
+                  <input
+                    type="text"
+                    required
+                    value={goalName}
+                    onChange={(e) => setGoalName(e.target.value)}
+                    className="w-full bg-yellow-500/10 border-2 border-yellow-500/40 rounded-2xl py-3 px-4 text-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all placeholder:text-yellow-300/50 hover:border-yellow-500/60"
+                    placeholder="e.g., Vacation Trip"
+                  />
                 </div>
-              );
-            })
-          )}
-        </section>
-      </main>
-      
-      <nav className="fixed bottom-0 left-0 w-full z-50 bg-black/70 backdrop-blur-[20px] border-t border-white/15 flex justify-around items-center px-4 pb-8 pt-3">
-        <Link to="/dashboard" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-          <span className="material-symbols-outlined" data-icon="analytics">analytics</span>
-          <span className="font-bold text-[10px] uppercase tracking-widest mt-1">Summary</span>
-        </Link>
-        <Link to="/reports" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-          <span className="material-symbols-outlined" data-icon="monitoring">monitoring</span>
-          <span className="font-bold text-[10px] uppercase tracking-widest mt-1">Trends</span>
-        </Link>
-        <Link to="/expense-history" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-          <span className="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
-          <span className="font-bold text-[10px] uppercase tracking-widest mt-1">History</span>
-        </Link>
-        <Link to="/profile" className="flex flex-col items-center justify-center text-gray-500 hover:text-white transition-colors active:scale-90 duration-200">
-          <span className="material-symbols-outlined" data-icon="person">person</span>
-          <span className="font-bold text-[10px] uppercase tracking-widest mt-1">Profile</span>
-        </Link>
-      </nav>
-    </>
+                <div>
+                  <label className="block text-sm font-bold text-yellow-300 mb-3 uppercase tracking-wider">Target Amount (₹)</label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    className="w-full bg-yellow-500/10 border-2 border-yellow-500/40 rounded-2xl py-3 px-4 text-yellow-100 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all placeholder:text-yellow-300/50 hover:border-yellow-500/60"
+                    placeholder="10000"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3.5 rounded-xl font-bold text-yellow-400 text-lg bg-gradient-to-r from-slate-800 to-slate-900 border border-yellow-500/50 hover:from-slate-700 hover:to-slate-800 hover:text-yellow-300 transition-all shadow-lg shadow-yellow-500/20 mt-4 hover:shadow-yellow-500/30 hover:-translate-y-0.5 active:translate-y-0 transform hover:scale-105 active:scale-95"
+                >
+                  <span className="flex items-center gap-2 justify-center"><Sparkles size={18} /> CREATE GOAL</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Goals List */}
+        <div className="lg:col-span-2 space-y-8">
+          <div className="glass-panel p-6">
+            <h2 className="text-xl font-semibold mb-6 text-yellow-300 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="p-2 bg-yellow-500/20 rounded-lg text-yellow-400"><Target size={20} /></span>
+                Active Savings Goals
+              </div>
+              <span className="text-sm font-normal text-yellow-200">Available: ₹{totalBalance.toLocaleString()}</span>
+            </h2>
+            
+            {goals.length === 0 ? (
+              <div className="h-32 flex items-center justify-center text-yellow-300 border border-dashed border-slate-700 rounded-xl">
+                No savings goals set yet.
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {goals.map((goal, idx) => {
+                  const progress = Math.min((totalBalance / goal.amount) * 100, 100).toFixed(0);
+                  const isCompleted = progress >= 100;
+                  
+                  return (
+                    <div key={goal.id || idx} className="space-y-3">
+                      <div className="flex justify-between items-end">
+                        <div>
+                          <h3 className="font-medium text-lg text-white flex items-center gap-2">
+                            {goal.goalName}
+                            {isCompleted && <span className="text-xs px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-400">Achieved</span>}
+                          </h3>
+                          <p className="text-sm text-yellow-300">₹{totalBalance.toLocaleString()} of ₹{Number(goal.amount).toLocaleString()}</p>
+                        </div>
+                        <span className={`text-xl font-bold ${isCompleted ? 'text-teal-400' : 'text-yellow-400'}`}>
+                          {progress}%
+                        </span>
+                      </div>
+                      
+                      <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden shadow-inner">
+                        <div 
+                          className={`h-full rounded-full transition-all duration-1000 ${
+                            isCompleted 
+                              ? 'bg-linear-to-r from-teal-500 to-teal-400'
+                              : 'bg-linear-to-r from-yellow-500 to-yellow-400'
+                          }`}
+                          style={{ width: `${progress}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="glass-panel p-6">
+             <h2 className="text-xl font-semibold mb-4 text-white flex items-center gap-2">
+              <span className="p-2 bg-yellow-500/20 rounded-lg text-yellow-400"><Calendar size={20} /></span>
+              Monthly Budget Limits
+            </h2>
+            <p className="text-yellow-300 mb-6 text-sm">
+              Your overall spending limit for this month is set to <span className="text-white font-bold">₹{summary.budgetLimit?.toLocaleString() || 15000}</span>.
+              (Manage via Settings/Profile).
+            </p>
+            
+            <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
+               <div className="flex justify-between items-center mb-2">
+                  <span className="text-yellow-300 font-medium">Current Spending</span>
+                  <span className="text-yellow-300">
+                    <span className="text-white">₹{summary.totalExpense?.toLocaleString()}</span> / ₹{summary.budgetLimit?.toLocaleString() || 15000}
+                  </span>
+               </div>
+               <div className="h-2 w-full bg-slate-900 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-linear-to-r from-yellow-500 to-yellow-400 rounded-full"
+                    style={{ width: `${Math.min((summary.totalExpense / (summary.budgetLimit || 15000)) * 100, 100)}%` }}
+                  ></div>
+               </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 }

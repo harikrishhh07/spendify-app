@@ -1,17 +1,11 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import { useAuth } from './AuthContext';
 
 const ExpenseContext = createContext();
 
 export const useExpenses = () => useContext(ExpenseContext);
 
-const initialTransactions = [];
-
-const initialBudgets = {
-  Housing: 15000,
-  Food: 5000,
-  Fun: 3000,
-  Transport: 2000
-};
+const API_BASE = 'http://127.0.0.1:5000/api';
 
 // Utility function to detect subscriptions
 const detectSubscriptions = (transactions) => {
@@ -166,7 +160,20 @@ export const ExpenseProvider = ({ children }) => {
     }
   });
 
-  const [budgets] = useState(initialBudgets);
+      // Fetch Summary
+      const sumRes = await fetch(`${API_BASE}/summary/${userId}`);
+      if (sumRes.ok) {
+        setSummary(await sumRes.json());
+      }
+      
+      // Since budgets and goals are mostly static for now, we'll fetch them if you want, 
+      // but let's stick to the summary for now to prevent over-fetching.
+      setBudgets({ limit: summary.budgetLimit || 0 });
+
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  }, [userId]);
 
   useEffect(() => {
     try {
@@ -196,12 +203,46 @@ export const ExpenseProvider = ({ children }) => {
     setTransactions([{ ...transaction, id: Date.now().toString() }, ...transactions]);
   };
 
-  const deleteTransaction = (id) => {
-    setTransactions(transactions.filter(t => t.id !== id));
+  const deleteTransaction = async (id, type = 'expense') => {
+    // Note: Our API only handles delete expense currently, we can add delete income if needed
+    if (type !== 'expense') return; 
+    try {
+      const response = await fetch(`${API_BASE}/expenses/${id}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Failed to delete transaction:", error);
+    }
   };
 
-  const addGoal = (goal) => {
-    setGoals([{ ...goal, id: Date.now().toString() }, ...goals]);
+  const addGoal = async (goal) => {
+    if (!userId) return;
+    
+    try {
+      const response = await fetch(`${API_BASE}/savings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: userId,
+          goalName: goal.goalName,
+          amount: parseFloat(goal.amount),
+          date: goal.date || new Date().toISOString().split('T')[0]
+        })
+      });
+      
+      if (response.ok) {
+        const newGoal = await response.json();
+        setGoals([newGoal, ...goals]);
+        console.log("Goal saved to MySQL:", newGoal);
+      } else {
+        console.error("Failed to save goal:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error saving goal:", error);
+    }
   };
 
   const setBalance = (amount) => {
